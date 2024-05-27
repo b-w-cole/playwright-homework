@@ -78,7 +78,7 @@ test('Pet type name is required validation', async ({page}) => {
   await textField.clear()
 
   //5. Add the assertion for the "Name is required" message below the input field
-  expect(await page.getByText('Name is required').isVisible).toBeTruthy()
+  expect(await page.getByText('Name is required').isVisible()).toBeTruthy()
 
   //6. Click on "Update" button
   await page.getByText('Update').click()
