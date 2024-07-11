@@ -7,27 +7,7 @@ test.beforeEach( async({page}) => {
   await page.locator('a[title="pettypes"]').click()
 
   /* 2. Add assertion of the "Pet Types" text displayed above the table with the list of pet types */
-  // List all child elements of this div.  Should contain header and table.
-  const elements = await page.locator('div.container.xd-container').all()
-
-  // Iterating through the list...
-  for(let i = 0; i < elements.length; i++){
-
-    // If we've found the header...
-    if(await elements[i].textContent() === "PetTypes"){
-      try{
-        // ...check to see if the table is the next element
-        expect(await elements[i+1].textContent()).toEqual("Name")
-      }
-      catch(failure){
-        // Hacking a meaningful error message in case the order of elements is not correct
-        expect('"Pet Types" is NOT directly above the table."').toEqual('"Pet Types" is displayed above the pet name table.')
-      }
-      
-      break
-    }
-  }
-
+  await expect(page.locator('h2')).toHaveText("Pet Types")
 
 });
 
@@ -40,8 +20,7 @@ test('Update pet type', async ({page}) => {
 
   
   /* 4. Add assertion of the "Edit Pet Type" text displayed */
-  // expect(await page.getByText('Edit Pet Type').textContent()).toEqual('Edit Pet Type')
-  expect(await page.locator('h2').textContent()).toEqual('Edit Pet Type')
+  await expect(page.locator('h2')).toHaveText('Edit Pet Type')
   
   /* 5. Change the pet type name from "cat" to "rabbit" and click "Update" button */
   // Updating "cat" to be "rabbit"
@@ -53,7 +32,10 @@ test('Update pet type', async ({page}) => {
 
   /* 6. Add the assertion that the first pet type in the list of types has a value "rabbit" */
   // Expecting the newly updated entry to say "rabbit"
-  expect(await page.locator('input[name=pettype_name]').first().inputValue()).toEqual('rabbit')
+  //expect(await page.locator('input[name=pettype_name]').first().inputValue()).toEqual('rabbit')
+ // await expect(page.locator('input[name=pettype_name]'))
+
+  await expect(page.locator('input[name=pettype_name]').first()).toHaveValue('rabbit')
   
   /* 7. Click on "Edit" button for the same "rabbit" pet type */
   // Set the field back to its original value
@@ -69,7 +51,7 @@ test('Update pet type', async ({page}) => {
   
   /* 9. Add the assertion that the first pet type in the list of names has a value "cat" */
   // Verifying the input field once again says "cat"
-  expect(await page.locator('input[name=pettype_name]').first().inputValue()).toEqual('cat')
+  await expect(page.locator('input[name=pettype_name]').first()).toHaveValue('cat')
 })
 
 test('Cancel pet type update', async ({page}) => {
@@ -86,15 +68,15 @@ test('Cancel pet type update', async ({page}) => {
 
   /* 5. Add assertion the value "moose" is displayed in the input field of the "Edit Pet Type" page */
   // Verifying the still-editable input field says "moose"
-  expect(await editPetTypeField.inputValue()).toBe('moose')
+  await expect(editPetTypeField).toHaveValue('moose')
   
   /* 6. Click on "Cancel" button */
-  // Nevermind - clicking the "cancel" button
+  // Clicking the "cancel" button
   await page.locator('button', {hasText: 'Cancel'}).click()
 
   /* 7. Add the assertion the value "dog" is still displayed in the list of pet types */
   // Verifying the inputfield still says "dog"
-  expect(await page.locator('input[name=pettype_name]').nth(1).inputValue()).toBe('dog')
+  await expect(page.locator('input[name=pettype_name]').nth(1)).toHaveValue('dog')
 })
 
 test('Pet type name is required validation', async ({page}) => {
@@ -110,7 +92,7 @@ test('Pet type name is required validation', async ({page}) => {
 
   /* 5. Add the assertion for the "Name is required" message below the input field */
   // Expecting to see the message to fill in the pet type name
-  expect(await page.locator('div').filter({ hasText: 'Name' }).nth(-1).textContent()).toEqual('Name is required')
+  await expect(page.locator('div').filter({ hasText: 'Name' }).nth(-1)).toHaveText('Name is required')
 
   /* 6. Click on "Update" button */
   // We will try to update the field anyway
@@ -118,7 +100,7 @@ test('Pet type name is required validation', async ({page}) => {
 
   /* 7. Add assertion that "Edit Pet Type" page is still displayed */
   // Verifying that we are still on the same Edit page
-  expect(await page.locator('h2').textContent()).toEqual('Edit Pet Type')
+  await expect(page.locator('h2')).toHaveText('Edit Pet Type')
 
   /* 8. Click on the "Cancel" button */
   // Clicking "Cancel" to go back
@@ -126,5 +108,5 @@ test('Pet type name is required validation', async ({page}) => {
 
   /* 9. Add assertion that "Pet Types" page is displayed */
   // Verifying we are back on the Pet Types page
-  expect(await page.locator('h2').textContent()).toEqual(('Pet Types'))
+  await expect(page.locator('h2')).toHaveText('Pet Types')
 })
