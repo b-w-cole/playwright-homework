@@ -15,9 +15,15 @@ test.beforeEach( async({page}) => {
 
     // If we've found the header...
     if(await elements[i].textContent() === "PetTypes"){
-
-      // ...check to see if the table is the next element
-      expect(await elements[i+1].textContent()).toEqual("Name")
+      try{
+        // ...check to see if the table is the next element
+        expect(await elements[i+1].textContent()).toEqual("Name")
+      }
+      catch(failure){
+        // Hacking a meaningful error message in case the order of elements is not correct
+        expect('"Pet Types" is NOT directly above the table."').toEqual('"Pet Types" is displayed above the pet name table.')
+      }
+      
       break
     }
   }
