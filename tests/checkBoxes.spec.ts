@@ -17,7 +17,6 @@ test('Validate selected specialties', async ({page}) => {
 
     /* 3. Select the first veterinarian "Helen Leary" and click "Edit Vet" button */
     // Click edit vet to edit the 2nd entry
-    //await page.locator('button', {hasText: 'Edit Vet'}).nth(1).click()
     await page.getByText('Edit Vet').nth(1).click()
 
     /* 4. Add assertion of the "Specialties" field. The value "radiology" is displayed */
