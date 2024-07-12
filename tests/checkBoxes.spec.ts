@@ -4,9 +4,9 @@ test.beforeEach( async({page}) => {
     await page.goto('/')
   
     /* 1. Select the VETERINARIANS menu item in the navigation bar, then select "All" */
-    // Navigate to the 'Veterinarians' page
-    await page.locator('a', {hasText: ' Veterinarians'}).click()
-    await page.locator('a', {hasText: 'All'}).click()
+    // Navigate to the 'Veterinarians' page through the dropdown menu on the home page
+    await page.getByText("Veterinarians").click();
+    await page.getByText("All").click()
 
   });
 
@@ -17,11 +17,12 @@ test('Validate selected specialties', async ({page}) => {
 
     /* 3. Select the first veterinarian "Helen Leary" and click "Edit Vet" button */
     // Click edit vet to edit the 2nd entry
-    await page.locator('button', {hasText: 'Edit Vet'}).nth(1).click()
+    //await page.locator('button', {hasText: 'Edit Vet'}).nth(1).click()
+    await page.getByText('Edit Vet').nth(1).click()
 
     /* 4. Add assertion of the "Specialties" field. The value "radiology" is displayed */
     const specialtiesDropdown = page.locator('div.dropdown')
-    const specialtiesDropdownText = specialtiesDropdown.locator('div span.selected-specialties')
+    const specialtiesDropdownText = specialtiesDropdown.locator('.selected-specialties')
 
     // Validate that the dropdown text says 'radiology'
     await expect(specialtiesDropdownText).toHaveText('radiology')
@@ -31,9 +32,9 @@ test('Validate selected specialties', async ({page}) => {
     await specialtiesDropdown.click()
 
     /* 6. Add assertion that "radiology" specialty is checked */
-    const radiologyOption = page.locator('input#radiology')
-    const surgeryOption = page.locator('input#surgery')
-    const dentistryOption = page.locator('input#dentistry')
+    const radiologyOption = page.locator('#radiology')
+    const surgeryOption = page.locator('#surgery')
+    const dentistryOption = page.locator('#dentistry')
 
     // Validate that the 'radiology' option is checked, as displayed in the dropdown
     await expect(radiologyOption).toBeChecked()
@@ -66,11 +67,11 @@ test('Select all specialties', async ({page}) => {
 
     /* 2. Select the fourth veterinarian "Rafael Ortega" and click "Edit Vet" button */
     // Edit the fourth veterinarian in the list
-    await page.locator('button', {hasText: 'Edit Vet'}).nth(3).click()
+    await page.getByText('Edit Vet').nth(3).click()
 
     /* 3. Add assertion that "Specialties" field is displayed value "surgery" */
     const specialtiesDropdown = page.locator('div.dropdown')
-    const specialtiesDropdownText = specialtiesDropdown.locator('div span.selected-specialties')
+    const specialtiesDropdownText = specialtiesDropdown.locator('.selected-specialties')
 
     // Validate that the specialties listed is only 'surgery'
     await expect(specialtiesDropdownText).toHaveText('surgery')
@@ -80,22 +81,20 @@ test('Select all specialties', async ({page}) => {
     await specialtiesDropdown.click()
 
     /* 5. Check all specialties from the list */
-    const radiologyOption = page.locator('input#radiology')
-    const surgeryOption = page.locator('input#surgery')
-    const dentistryOption = page.locator('input#dentistry')
-    const nailTrimsOption = page.getByRole('checkbox', {name: 'nail trim'})
-
-    // Checking the rest of the options from the list
-    await radiologyOption.check()
-    await dentistryOption.check()
-    await nailTrimsOption.check()
-
     /* 6. Add assertion that all specialties are checked */
-    // Validate that all specialties have been checked
-    await expect(radiologyOption).toBeChecked()
-    await expect(surgeryOption).toBeChecked()
-    await expect(dentistryOption).toBeChecked()
-    await expect(nailTrimsOption).toBeChecked()
+
+    // Capture all specialties from checkbox
+    const specialties = page.locator('.dropdown-content label')
+    
+    for(const specialty of await specialties.allTextContents()){
+        const checkbox = page.getByRole('checkbox', {name: specialty})
+        
+        // Check every box
+        await checkbox.check()
+
+        // Validate that the box is checked
+        await expect(checkbox).toBeChecked()
+    }
 
     /* 7. Add assertion that all checked specialities are displayed in the "Specialties" field */
     // Validate that all specialties are displayed accordingly
@@ -118,21 +117,20 @@ test('Unselect all specialties', async ({page}) => {
     await specialtiesDropdown.click()
 
     /* 5. Uncheck all specialties from the list */
-    const radiologyOption = page.locator('input#radiology')
-    const surgeryOption = page.locator('input#surgery')
-    const dentistryOption = page.locator('input#dentistry')
-    const nailTrimsOption = page.getByRole('checkbox', {name: 'nail trim'})
-
-    // Unselect the specialties
-    await surgeryOption.uncheck()
-    await dentistryOption.uncheck()
-
     /* 6. Add assertion that all specialties are unchecked */
-    // Validate that all options are unchecked
-    await expect(radiologyOption).not.toBeChecked()
-    await expect(surgeryOption).not.toBeChecked()
-    await expect(dentistryOption).not.toBeChecked()
-    await expect(nailTrimsOption).not.toBeChecked()
+
+    // Capture all specialties from checkbox
+    const specialties = page.locator('.dropdown-content label')
+    
+    for(const specialty of await specialties.allTextContents()){
+        const checkbox = page.getByRole('checkbox', {name: specialty})
+
+        // Check every box
+        await checkbox.uncheck()
+        
+        // Validate that the box is unchecked
+        await expect(checkbox).not.toBeChecked()
+    }
 
     /* 7. Add assertion that "Specialties" field is empty */
     // Validate that there are no specialties listed and the dropdown is empty
