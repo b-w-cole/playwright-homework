@@ -4,7 +4,7 @@ test.beforeEach( async({page}) => {
   await page.goto('/')
 
   /* 1. Select the PET TYPES menu item in the navigation bar */
-  await page.locator('a[title="pettypes"]').click()
+  await page.getByText('Pet Types').click()
 
   /* 2. Add assertion of the "Pet Types" text displayed above the table with the list of pet types */
   await expect(page.locator('h2')).toHaveText("Pet Types")
@@ -32,9 +32,6 @@ test('Update pet type', async ({page}) => {
 
   /* 6. Add the assertion that the first pet type in the list of types has a value "rabbit" */
   // Expecting the newly updated entry to say "rabbit"
-  //expect(await page.locator('input[name=pettype_name]').first().inputValue()).toEqual('rabbit')
- // await expect(page.locator('input[name=pettype_name]'))
-
   await expect(page.locator('input[name=pettype_name]').first()).toHaveValue('rabbit')
   
   /* 7. Click on "Edit" button for the same "rabbit" pet type */
@@ -92,8 +89,8 @@ test('Pet type name is required validation', async ({page}) => {
 
   /* 5. Add the assertion for the "Name is required" message below the input field */
   // Expecting to see the message to fill in the pet type name
-  await expect(page.locator('div').filter({ hasText: 'Name' }).nth(-1)).toHaveText('Name is required')
-
+  await expect(page.locator('div', {hasText: 'Name'}).last()).toHaveText('Name is required')
+    
   /* 6. Click on "Update" button */
   // We will try to update the field anyway
   await page.locator('button', {hasText: 'Update'}).click()
