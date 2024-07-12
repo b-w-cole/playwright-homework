@@ -16,7 +16,6 @@ export default defineConfig({
     extraHTTPHeaders: {
       'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`
     },
-    actionTimeout: 10000,
     viewport: {height: 1080, width: 1920}
   },
 
