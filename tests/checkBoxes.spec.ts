@@ -22,7 +22,7 @@ test('Validate selected specialties', async ({page}) => {
 
     /* 4. Add assertion of the "Specialties" field. The value "radiology" is displayed */
     const specialtiesDropdown = page.locator('div.dropdown')
-    const specialtiesDropdownText = specialtiesDropdown.locator('.selected-specialties')
+    const specialtiesDropdownText = page.locator('.selected-specialties')
 
     // Validate that the dropdown text says 'radiology'
     await expect(specialtiesDropdownText).toHaveText('radiology')
@@ -71,7 +71,7 @@ test('Select all specialties', async ({page}) => {
 
     /* 3. Add assertion that "Specialties" field is displayed value "surgery" */
     const specialtiesDropdown = page.locator('div.dropdown')
-    const specialtiesDropdownText = specialtiesDropdown.locator('.selected-specialties')
+    const specialtiesDropdownText = page.locator('.selected-specialties')
 
     // Validate that the specialties listed is only 'surgery'
     await expect(specialtiesDropdownText).toHaveText('surgery')
@@ -108,7 +108,7 @@ test('Unselect all specialties', async ({page}) => {
 
     /* 3. Add assertion of the "Specialties" field displayed value "surgery, dentistry" */
     const specialtiesDropdown = page.locator('div.dropdown')
-    const specialtiesDropdownText = specialtiesDropdown.locator('div span.selected-specialties')
+    const specialtiesDropdownText = page.locator('div span.selected-specialties')
 
     // Validate that the dropdown displays both 'dentistry' and 'surgery' selections
     await expect(specialtiesDropdownText).toHaveText('dentistry, surgery')
@@ -127,7 +127,7 @@ test('Unselect all specialties', async ({page}) => {
 
         // Check every box
         await checkbox.uncheck()
-        
+
         // Validate that the box is unchecked
         await expect(checkbox).not.toBeChecked()
     }
