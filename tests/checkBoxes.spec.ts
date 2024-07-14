@@ -83,15 +83,12 @@ test('Select all specialties', async ({page}) => {
     /* 6. Add assertion that all specialties are checked */
 
     // Capture all specialties from checkbox
-    const specialties = page.locator('.dropdown-content label')
-    
-    for(const specialty of await specialties.allTextContents()){
-        const checkbox = page.getByRole('checkbox', {name: specialty})
-        
-        // Check every box
+    const allCheckboxes = page.getByRole('checkbox')
+    for(const checkbox of await allCheckboxes.all()){
+        // Check the box
         await checkbox.check()
 
-        // Validate that the box is checked
+        // Validate that the box has been checked
         await expect(checkbox).toBeChecked()
     }
 
@@ -119,14 +116,12 @@ test('Unselect all specialties', async ({page}) => {
     /* 6. Add assertion that all specialties are unchecked */
 
     // Capture all specialties from checkbox
-    const specialties = page.locator('.dropdown-content label')
+    const allCheckboxes = page.getByRole("checkbox")
     
-    for(const specialty of await specialties.allTextContents()){
-        const checkbox = page.getByRole('checkbox', {name: specialty})
-
+    for(const checkbox of await allCheckboxes.all()){
         // Check every box
         await checkbox.uncheck()
-
+        
         // Validate that the box is unchecked
         await expect(checkbox).not.toBeChecked()
     }
