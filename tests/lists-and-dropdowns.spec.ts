@@ -3,8 +3,9 @@ import { test, expect } from '@playwright/test';
 test.beforeEach( async({page}) => {
   await page.goto('/')
   /* 1. Select the OWNERS menu item in the navigation bar and then select "Search" from the drop-down menu */
-    await page.locator('a', {hasText: 'Owners'}).click()
-    await page.locator('a', {hasText: 'Search'}).click()
+    await page.getByText('Owners').click()
+    await page.getByText('Search').click()
+
 
 });
 
@@ -23,7 +24,7 @@ test('Validate selected pet types from the list', async ({page}) => {
     
     /* 5. In the "Pets and Visits" section, click on "Edit Pet" button for the pet with a name "Leo" */
     // Edit the pet
-    await page.getByText('Edit Pet').click()
+    await page.getByText('Leo').locator('..').getByText('Edit Pet').click()
 
     /* 6. Add assertion of "Pet" text displayed as header on the page */
     // Validate that h2 says "Pet" as expected
@@ -39,10 +40,10 @@ test('Validate selected pet types from the list', async ({page}) => {
     await expect(selectedPetType).toHaveValue('cat')
 
     /* 9. Using a loop, select the values from the drop-down one by one, and add the assertion, that every selected value from the drop-down is displayed in the "Type" field */
-    const allOptions = page.locator("option").allTextContents()
+    const allOptions = await page.locator("option").allTextContents()
   
     /* Iterate through each option to validate that the pet is correctly listed in the textbox to the left */  
-    for(const option of await allOptions){
+    for(const option of allOptions){
       // Click the option
       await page.selectOption('select', option)
       
@@ -63,9 +64,9 @@ test('Validate the pet type update', async ({page}) => {
 
     /* 4. In the "Pets and Visits" section, click on "Edit Pet" button for the pet with a name "Rosy" */
     // Edit the pet record for "Rosy"
-    const editRosy = page.locator('table tr app-pet-list').last().getByText('Edit Pet')
-    await editRosy.click()
-
+    const editPetButton = page.getByText('Rosy').locator('..').getByText('Edit Pet')
+    await editPetButton.click()
+    
     /* 5. Add the assertion that name "Rosy" is displayed in the input field "Name" */
     // Validate that the name input field displays "Rosy"
     await expect(page.locator('#name')).toHaveValue('Rosy')
@@ -89,13 +90,13 @@ test('Validate the pet type update', async ({page}) => {
 
     /* 10. On the "Owner Information" page, add the assertion that pet "Rosy" has a new value of the Type "bird" */
     // Validate that Rosy's new pet type says "bird"
-    const rosyPetType = page.locator('table tr app-pet-list table dd').last()
+    const rosyPetType = page.getByText('Rosy').locator('..').locator('dd').last()
     await expect(rosyPetType).toHaveText('bird')
     
     /* 11. Select "Edit Pet" button one more time, and perform steps 6-10 to revert the selection of the pet type "bird" to its initial value "dog" */
     /* Iterate through the process to change Rosy's pet type back to "dog" */
     // Edit Rosy's pet record again
-    await editRosy.click()
+    await editPetButton.click()
 
     // Make sure the pet type still says bird
     await expect(selectedPetType).toHaveValue('bird')
