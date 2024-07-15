@@ -128,5 +128,5 @@ test('Unselect all specialties', async ({page}) => {
 
     /* 7. Add assertion that "Specialties" field is empty */
     // Validate that there are no specialties listed and the dropdown is empty
-    await expect(specialtiesDropdownText).toHaveText('')
+    await expect(specialtiesDropdownText).toBeEmpty()
 });
