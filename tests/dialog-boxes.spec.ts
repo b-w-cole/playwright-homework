@@ -33,7 +33,7 @@ test('Home page is opened and Welcome message is displayed', async ({page}) => {
     /* 5. Add a new pet type with the name "pig" and click "Save" button */
     // Adding 'pig' as the new pet type
     await input.click()
-    await page.keyboard.type('pig')
+    await input.fill('pig')
     await page.getByText('Save').click()
 
     /* 6. Add assertion that the last item in the list of pet types has value of "pig" */
