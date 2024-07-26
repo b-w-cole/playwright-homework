@@ -10,10 +10,11 @@ test.describe('Validate Owner Information', () => {
     
     test.beforeEach(async ({ page }) => {
         /* 1. Select the OWNERS menu item in the navigation bar and then select "Search" from the drop-down menu */
-        // Navigate to the owners table
+        // Navigate to the owners table for the following tests
         await page.getByText('Owners').click()
         await page.getByText('Search').click()
     })
+
     test('Validate the pet name city of the owner', async ({ page }) => {
         /* 2. In the list of Owners, locate the owner by the name "Jeff Black". 
         Add the assertions that this owner is from the city of "Monona" and he has a pet with a name "Lucky" */
@@ -26,63 +27,50 @@ test.describe('Validate Owner Information', () => {
         // Validate the owner has a pet named Lucky
         await expect(row.locator('td').nth(4)).toHaveText('Lucky')
     
-    });
+    })
     
     test('Validate owners count of the Madison city', async ({ page }) => {
         /* 2. In the list of Owners, locate all owners who live in the city of "Madison". 
         Add the assertion that the total number of owners should be 4 */
         
         // Validate there are only 4 entries of 'Madison' in the city column
-        await expect(page.getByRole('row', {name: 'Madison'})
-            // Filtering specifically for the City column
-            .filter({has: page.getByRole('cell').nth(2)})).toHaveCount(4)
+        await expect(page.getByRole('row', {name: 'Madison'})).toHaveCount(4)
     
-    });
+    })
     
     test('Validate search by Last Name', async ({ page }) => {
         /* 2. - 8. In the "Last name" input field, type the last name "Black", "Davis", "Es" (partial string), and "Playwright". */
-        // Search for the following last names and validate the results
         const lastNames = ['Black', 'Davis', 'Es', 'Playwright']
     
         for(const lastName of lastNames){
-            // Use the search field to locate entries with a specific last name
             await page.getByRole('textbox').fill(lastName)
             await page.getByText('Find Owner').click()
             
-            // Capture the rows in the table body (not the header)
-            const rows = await page.locator('tbody tr').all()
-    
-            // For each resulting row, check for the last name
+            await page.waitForResponse("https://petclinic-api.bondaracademy.com/petclinic/api/owners?lastName*")
+
+            // Capture the rows in the table body pertaining to the owner
+            const rows = await page.locator('.ownerFullName').all()
+
             for(const row of rows){
-    
-                // Ensuring the resulting row has cells. There is an extra row in the 'Pets' column that we need to filter out, as it contains no cells.
-                if((await row.getByRole('cell').all()).length > 0){
-    
-                    // Checking if the name isn't our negative test, 'Playwright'.
-                    if(lastName !== 'Playwright'){
-    
-                        // Validating that the last name is in the first cell in the row
-                        await expect(row.getByRole('cell').first()).toContainText(lastName) 
-                    }
-                    else{
-                        /* 9. Add the assertion of the message "No owners with LastName starting with "Playwright"" */
-                        // Validate that the error message is correct for a last name that cannot be found
-                        await expect(page.locator('h2').locator('..').locator('div').last()).toHaveText("No owners with LastName starting with \"Playwright\"")
-                    }
+
+                // Checking if the name isn't our negative test, 'Playwright'.
+                if(lastName !== 'Playwright'){
+                    await expect(row).toContainText(lastName) 
+                }
+                else{
+                    /* 9. Add the assertion of the message "No owners with LastName starting with "Playwright"" */
+                    // If we get an unknown name, the message below should be displayed
+                    await expect(page.locator('div.container.xd-container div').last()).toHaveText('No owners with LastName starting with \"Playwright\"')
                 }
             }
         }
-    });
+    })
     
     test('Validate phone number and pet name on the Owner Information page', async ({ page }) => {
         /* 2. Locate the owner by the phone number "6085552765". Extract the Pet name displayed in the table for the owner and save it to the variable. Click on this owner. */
         const phoneNumber = '6085552765'
-        
-        // Capture the row with the above associated phone number
         const row = page.getByRole('row', {name: phoneNumber})
-        
-        // Extract the pet name from the row
-        const petName = await row.locator('td').nth(4).textContent()!
+        const petName = await row.locator('td').nth(4).textContent()
     
         // Click on the owner to go to the owner information page
         await row.getByRole('link').click()
@@ -93,9 +81,8 @@ test.describe('Validate Owner Information', () => {
     
         /* 4. Add the assertion that Pet Name in the Owner Information card matches the name extracted from the page on the step 2 */
         // Validate the correct pet name by finding 'name' in the first pet information table
-        // Assumes we are searching for one pet
-        await expect(page.locator('dt', {hasText: 'Name'}).locator('..').locator('dd').first()).toHaveText(petName)
-    });
+        await expect(page.locator('div.container.xd-container').locator('dd').first()).toContainText(petName!)
+    })
     
     test('Validate pets of the Madison city', async ({ page }) => {
         // Wait for the table and its data to load
@@ -124,9 +111,7 @@ test.describe('Validate Owner Information', () => {
         // Comparing both sorted lists for equality
         expect (actualPetsList.sort()).toEqual(expectedPetsList.sort())
     
-    });
-    
-
+    })
 })
 
 
@@ -174,11 +159,12 @@ test('Validate specialty update', async ({ page }) => {
 
     /* 7. Update the specialty from "surgery" to "dermatology" and click "Update button" */
     // Await 'surgery' to load in the input...
-    await expect(page.locator('#name')).toHaveValue('surgery')
+    const specialtyInput = page.locator('#name')
+    await expect(specialtyInput).toHaveValue('surgery')
 
     // Update the 
-    await page.locator('#name').clear()
-    await page.locator('#name').fill('dermatology')
+    await specialtyInput.clear()
+    await specialtyInput.fill('dermatology')
     await page.getByText('Update').click()
     
     /* 8. Add assertion that "surgery" was changed to "dermatology" in the list of specialties */
@@ -208,14 +194,14 @@ test('Validate specialty update', async ({ page }) => {
     }
 
     // Await 'surgery' to load in the input...
-    await expect(page.locator('#name')).toHaveValue('dermatology')
+    await expect(specialtyInput).toHaveValue('dermatology')
 
     // Revert dermatology back to surgery
-    await page.locator('#name').clear()
-    await page.locator('#name').fill('surgery')
+    await specialtyInput.clear()
+    await specialtyInput.fill('surgery')
     await page.getByText('Update').click()
-    
-});
+
+})
 
 
 test('Validate specialty lists', async ({ page }) => {
@@ -230,9 +216,6 @@ test('Validate specialty lists', async ({ page }) => {
     await page.getByRole('button', {name: 'Add'}).click()
     await page.locator('#name').fill('oncology')
     await page.getByText('Save').click()
-
-    // Wait for Specialty table contents to load
-    await page.waitForSelector('tbody')
     
     // Validate 'oncology' was added
     await expect(page.locator('tbody tr').last().getByRole('textbox')).toHaveValue('oncology')
@@ -244,7 +227,6 @@ test('Validate specialty lists', async ({ page }) => {
 
     // Iterate through all the rows to collect the Specialty and store in allSpecialties for future validation
     for(const input of allSpecialtyInputs){
-        console.log(await input.inputValue())
         allSpecialties.push(await input.inputValue())
     }
 
@@ -252,9 +234,6 @@ test('Validate specialty lists', async ({ page }) => {
     // Navigate to the 'Veterinarians' page through the dropdown menu at the top
     await page.getByText("Veterinarians").click();
     await page.getByText("All").click()
-
-    // Wait for all table contents to load
-    await page.waitForSelector('table')
     
     /* 5. On the Veterinarians page, locate the "Sharon Jenkins" in the list and click "Edit" button */
     // Locate Sharon Jenkins and click 'Edit'
@@ -266,7 +245,7 @@ test('Validate specialty lists', async ({ page }) => {
 
     /* 7. Add the assertion that array of specialties collected in the step 3 is equal the the array from drop-down menu */
     // Validate that the displayed list of specialties is the same as the one on the specialties page
-    expect(await page.getByRole('checkbox').locator('..').locator('label').allTextContents()).toEqual(allSpecialties)
+    expect(await page.locator('div.dropdown-content').locator('label').allTextContents()).toEqual(allSpecialties)
 
     /* 8. Select the "oncology" specialty and click "Save vet" button */
     // Select oncology
@@ -313,4 +292,4 @@ test('Validate specialty lists', async ({ page }) => {
     // Validate that 'Sharon Jenkins' has no specialty
     await expect(page.getByRole('row', {name: 'Sharon Jenkins'}).getByRole('cell').nth(1)).toBeEmpty()
 
-});
+})
