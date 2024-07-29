@@ -233,7 +233,7 @@ test('Validate specialty lists', async ({ page }) => {
     
     /* 5. On the Veterinarians page, locate the "Sharon Jenkins" in the list and click "Edit" button */
     // Locate Sharon Jenkins and click 'Edit'
-    await page.getByRole('row', {name: 'Sharon Jenkins'}).getByRole('cell').last().getByText('Edit Vet').click()
+    await page.getByRole('row', {name: 'Sharon Jenkins'}).getByText('Edit Vet').click()
     
     /* 6. Click on the Specialties drop-down menu. Extract all values from the drop-down menu to an array */
     // Click the dropdown for specialties
