@@ -100,12 +100,8 @@ test.describe('Validate Owner Information', () => {
     
         // Iterate through the rows to extract the pet names
         for(const row of madisonRows){
-            // Ensure we're not dealing with an empty row
-            if((await row.getByRole('cell').all()).length > 0){
-    
-                // Add the pet name to the comparing list of names, with each name trimmed of excess white space
-                actualPetsList.push( (await row.getByRole('cell').nth(4).textContent())?.trim() )
-            }
+            // Add the pet name to the comparing list of names, with each name trimmed of excess white space
+            actualPetsList.push( (await row.getByRole('cell').nth(4).textContent())?.trim() )
         }
     
         // Comparing both sorted lists for equality
@@ -208,7 +204,7 @@ test('Validate specialty lists', async ({ page }) => {
    
     /* 1. Select the SPECIALTIES menu item in the navigation bar */ 
     // Navigate to the Specialties page
-    await page.getByRole('link', {name: 'Specialties'}).click()
+    await page.getByText('Specialties').click()
 
     await page.waitForSelector('tbody')
     /* 2. On the Specialties page, select "Add" button. Type the new specialty "oncology" and click "Save" button */
@@ -237,25 +233,25 @@ test('Validate specialty lists', async ({ page }) => {
     
     /* 5. On the Veterinarians page, locate the "Sharon Jenkins" in the list and click "Edit" button */
     // Locate Sharon Jenkins and click 'Edit'
-    await page.getByRole('row', {name: 'Sharon Jenkins'}).getByRole('cell').last().getByRole('button', {name: 'Edit Vet'}).click()
+    await page.getByRole('row', {name: 'Sharon Jenkins'}).getByRole('cell').last().getByText('Edit Vet').click()
     
     /* 6. Click on the Specialties drop-down menu. Extract all values from the drop-down menu to an array */
     // Click the dropdown for specialties
-    await page.locator('div.dropdown-display').click()
+    await page.locator('.dropdown-display').click()
 
     /* 7. Add the assertion that array of specialties collected in the step 3 is equal the the array from drop-down menu */
     // Validate that the displayed list of specialties is the same as the one on the specialties page
-    expect(await page.locator('div.dropdown-content').locator('label').allTextContents()).toEqual(allSpecialties)
+    expect(await page.locator('.dropdown-content').locator('label').allTextContents()).toEqual(allSpecialties)
 
     /* 8. Select the "oncology" specialty and click "Save vet" button */
     // Select oncology
     await page.getByRole('checkbox', {name: 'oncology'}).check()
 
     // Close the dropdown
-    await page.locator('div.dropdown-display').click()
+    await page.locator('.dropdown-display').click()
 
     // Save vet record
-    await page.getByRole('button', {name: 'Save Vet'}).click()
+    await page.getByText('Save Vet').click()
 
     /* 9. On the Veterinarians page, add assertion, that "Sharon Jenkins" has specialty "oncology" */
     // Wait for Veterinarian table to load again
@@ -279,7 +275,7 @@ test('Validate specialty lists', async ({ page }) => {
         // If 'oncology' is found...
         if( await row.locator('input').inputValue() === 'oncology'){
             // 'Delete' it
-            await row.getByRole('button', { name: 'Delete' }).click()
+            await row.getByText('Delete').click()
             break;
         }
     }
