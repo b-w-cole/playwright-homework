@@ -142,11 +142,11 @@ test('Select the desired date in the calendar - 2', async ({page}) => {
     const petAppointments = petRecord.locator('app-visit-list tr')
 
     // Validate that the two appointments are listed in chronological order
-    const actualDermatologyAppointment = await petAppointments.nth(1).locator('td').first().textContent()
-    const actualMassageAppointment = await petAppointments.nth(2).locator('td').first().textContent()
+    const petSamanthaLaterAppointmentDate = await petAppointments.nth(1).locator('td').first().textContent()
+    const petSamanthaInitialAppointmentDate = await petAppointments.nth(2).locator('td').first().textContent()
     
     // The massage appointment is 45 days older than the dermatology one and should be the smaller number
-    expect(Date.parse(actualMassageAppointment!) < Date.parse(actualDermatologyAppointment!)).toBeTruthy()
+    expect(Date.parse(petSamanthaInitialAppointmentDate!) < Date.parse(petSamanthaLaterAppointmentDate!)).toBeTruthy()
 
     /* 14. Select the "Delete Visit" button for both newly created visits */
     // Clean up test data
