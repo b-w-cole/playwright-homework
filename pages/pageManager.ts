@@ -1,43 +1,69 @@
 import { Page } from "@playwright/test"
+import { AddPetPage } from "./addPetPage"
+import { EditPetPage } from "./editPetPage"
 import { NavigationPage } from "./navigationPage"
 import { OwnersPage } from "./ownersPage"
 import { OwnerInformationPage } from "./ownerInformationPage"
-import { PetDetailsPage } from "./petDetailsPage"
 import { PetTypeEditPage } from "./petTypeEditPage"
 import { PetTypesPage } from "./petTypesPage"
 import { SpecialtiesPage } from "./specialtiesPage"
-import { VeterinarianDetailsPage } from './veterinarianDetailsPage'
+import { EditVeterinarianPage } from "./editVeterinarianPage"
 import { VeterinariansPage } from "./veterinariansPage"
-import { VisitsPage } from "./visitsPage"
+import { NewVisitPage } from "./newVisitPage"
+import { EditSpecialtyPage } from "./editSpecialtyPage"
 
 export class PageManager{
 
+    private readonly addPetPage : AddPetPage
+    private readonly editPetPage : EditPetPage
+    private readonly editSpecialtyPage: EditSpecialtyPage
+    private readonly editVeterinarianPage : EditVeterinarianPage
     private readonly navigationPage : NavigationPage
+    private readonly newVisitPage : NewVisitPage
     private readonly ownersPage : OwnersPage
     private readonly ownerInformationPage : OwnerInformationPage
-    private readonly petDetailsPage : PetDetailsPage
     private readonly petTypeEditPage : PetTypeEditPage
     private readonly petTypesPage : PetTypesPage
     private readonly specialtiesPage : SpecialtiesPage
-    private readonly veterinarianDetailsPage : VeterinarianDetailsPage
     private readonly veterinariansPage : VeterinariansPage
-    private readonly visitsPage : VisitsPage
 
     constructor(page: Page){
+        this.addPetPage = new AddPetPage(page)
+        this.editPetPage = new EditPetPage(page)
+        this.editSpecialtyPage = new EditSpecialtyPage(page)
+        this.editVeterinarianPage = new EditVeterinarianPage(page)
         this.navigationPage = new NavigationPage(page)
+        this.newVisitPage = new NewVisitPage(page)
         this.ownersPage = new OwnersPage(page)
         this.ownerInformationPage = new OwnerInformationPage(page)
-        this.petDetailsPage = new PetDetailsPage(page)
         this.petTypeEditPage = new PetTypeEditPage(page)
         this.petTypesPage = new PetTypesPage(page)
         this.specialtiesPage = new SpecialtiesPage(page)
-        this.veterinarianDetailsPage = new VeterinarianDetailsPage(page)
         this.veterinariansPage = new VeterinariansPage(page)
-        this.visitsPage = new VisitsPage(page)
     }
 
     navigateTo(){
         return this.navigationPage
+    }
+
+    onAddPetPage(){
+        return this.addPetPage
+    }
+
+    onEditPetPage(){
+        return this.editPetPage
+    }
+
+    onEditSpecialtyPage(){
+        return this.editSpecialtyPage
+    }
+
+    onEditVeterinarianPage(){
+        return this.editVeterinarianPage
+    }
+
+    onNewVisitPage(){
+        return this.newVisitPage
     }
 
     onOwnersPage(){
@@ -46,10 +72,6 @@ export class PageManager{
     
     onOwnerInformationPage(){
         return this.ownerInformationPage
-    }
-    
-    onPetDetailsPage(){
-        return this.petDetailsPage
     }
 
     onPetTypeEditPage(){
@@ -63,18 +85,8 @@ export class PageManager{
     onSpecialtiesPage(){
         return this.specialtiesPage
     }
-
-    onVeterinarianDetailsPage(){
-        return this.veterinarianDetailsPage
-    }
     
     onVeterinariansPage(){
         return this.veterinariansPage
     }
-
-    onVisitsPage(){
-        return this.visitsPage
-    }
-
-
 }

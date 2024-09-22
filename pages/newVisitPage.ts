@@ -1,7 +1,7 @@
 import { Page, expect } from "@playwright/test"
 import { HelperBase } from "./helperBase"
 
-export class VisitsPage extends HelperBase{ 
+export class NewVisitPage extends HelperBase{ 
 
     constructor(page : Page){
         super(page)

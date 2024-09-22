@@ -6,7 +6,7 @@ export class PetTypeEditPage extends HelperBase{
         super(page)
     }
 
-    async enterNewPetType(petType: string){
+    async fillPetType(petType: string){
 
         const petTypeInputField = this.page.getByRole('textbox')
         
@@ -18,7 +18,7 @@ export class PetTypeEditPage extends HelperBase{
         await expect(petTypeInputField).toHaveValue(petType)
     }
 
-    async updateNewPetType(){
+    async updatePetType(){
         const petTypeInputField = this.page.getByRole('textbox')
 
         if(await petTypeInputField.inputValue() === ''){

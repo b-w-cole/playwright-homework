@@ -25,7 +25,7 @@ export class PetTypesPage extends HelperBase{
         await expect(this.page.locator('table input').last()).toHaveValue(petType)
     }
 
-    async editPetType(oldPetType: string){
+    async clickEditPetTypeFor(petType: string){
 
         await this.page.waitForSelector('tbody tr')
 
@@ -34,9 +34,12 @@ export class PetTypesPage extends HelperBase{
         // Iterate through rows to find pet type
         for (let row of allRows) {
             // If 'pet type' is found...
-            if( await row.locator('input').inputValue() === oldPetType){
+            if( await row.locator('input').inputValue() === petType){
                 // ... click 'Edit'
                 await row.getByRole('button', { name: 'Edit' }).click()
+
+                await expect(this.page.locator('h2')).toHaveText('Edit Pet Type')
+                
                 break;
             }
         }
@@ -60,7 +63,7 @@ export class PetTypesPage extends HelperBase{
         await expect(this.page.getByRole('textbox').last()).not.toHaveValue(petType)
     }
 
-    async validatePetTypeEntryByRowPosition(petType: string, i: number){
+    async validatePetTypeEntryByIndex(petType: string, i: number){
         await expect(this.page.locator('input[name=pettype_name]').nth(i)).toHaveValue(petType)
     } 
 

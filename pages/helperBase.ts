@@ -1,14 +1,10 @@
-import { Page, expect } from "@playwright/test"
+import { Page } from "@playwright/test"
 
 export class HelperBase{
     readonly page : Page
 
     constructor(page : Page){
         this.page = page
-    }
-
-    async validatePageHeader(headerName: string){
-        await expect(this.page.locator('h2')).toHaveText(headerName)
     }
 
     async selectDateFromCalendarTool(date: Date){

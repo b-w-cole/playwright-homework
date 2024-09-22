@@ -1,9 +1,14 @@
 import { Page, expect } from '@playwright/test';
 import { HelperBase } from './helperBase';
 
-export class VeterinarianDetailsPage extends HelperBase{
+export class EditVeterinarianPage extends HelperBase{
     constructor(page : Page){
         super(page)
+    }
+
+    async clickSaveVet(){
+        await this.closeDropdownIfOpen()
+        await this.page.getByText('Save Vet').click()
     }
 
     async validateSpecialtyDisplayedIs(specialty: string){
@@ -11,7 +16,7 @@ export class VeterinarianDetailsPage extends HelperBase{
     }
 
     async validateOnlySpecialtyCheckedIs(specialty: string){
-        await this.openDropdown()
+        await this.openDropdownIfClosed()
 
         const specialties = await this.page.getByRole('checkbox').all()
         
@@ -26,18 +31,18 @@ export class VeterinarianDetailsPage extends HelperBase{
     }
 
     async selectSpecialty(specialty: string){
-        await this.openDropdown()
+        await this.openDropdownIfClosed()
         await this.page.getByRole('checkbox', {name: specialty}).check()
     }
 
     async deselectSpecialty(specialty: string){
-        await this.openDropdown()
+        await this.openDropdownIfClosed()
         await this.page.getByRole('checkbox', {name: specialty}).uncheck()
 
     }
 
     async selectAllSpecialties(){
-        await this.openDropdown()
+        await this.openDropdownIfClosed()
         
         const allCheckboxes = this.page.getByRole('checkbox')
         
@@ -48,7 +53,7 @@ export class VeterinarianDetailsPage extends HelperBase{
     }
 
     async deselectAllSpecialties(){
-        await this.openDropdown()
+        await this.openDropdownIfClosed()
 
         const allCheckboxes = this.page.getByRole("checkbox")
     
@@ -58,11 +63,25 @@ export class VeterinarianDetailsPage extends HelperBase{
         }
     }
 
-    private async openDropdown(){
+    async getAllSpecialtiesFromDropdown(){
+        await this.openDropdownIfClosed()
+
+        const allSpecialties = await this.page.locator('.dropdown-content').locator('label').allTextContents()
+
+        return allSpecialties
+    }
+
+    private async openDropdownIfClosed(){
         // Validating the dropdown isn't already opened by checking to see if checkbox list is visible.
         if(! await this.page.locator('.dropdown-content').isVisible()){
-           await this.page.locator('.selected-specialties').click()
+           await this.page.locator('.dropdown-display').click()
         }
+    }
+
+    private async closeDropdownIfOpen(){
+        if(await this.page.locator('.dropdown-content').isVisible()){
+            await this.page.locator('.dropdown.show').click()
+         }
     }
 
 }

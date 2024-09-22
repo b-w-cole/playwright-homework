@@ -7,24 +7,15 @@ export class OwnerInformationPage extends HelperBase{
         super(page)
     }
 
-    async validateOwnerName(ownerName: string){
-        await expect(this.page.locator('.ownerFullName')).toHaveText(ownerName)
-    }
-
-    async validatePetType(petName: string, petType: string){
-        const rosyPetType = this.page.getByText(petName).locator('..').locator('dd').last()
-        await expect(rosyPetType).toHaveText(petType)
-
-    }
-
     async clickAddPet(){
         
         await this.page.getByRole('button', {name: 'Add New Pet'}).click()
-
+        await expect(this.page.locator('h2')).toHaveText('Add Pet')
     }
 
-    async editPet(petName: string){
+    async clickEditPetFor(petName: string){
         await this.page.getByText(petName).locator('..').getByRole('button', {name: 'Edit Pet'}).click()
+        await expect(this.page.locator('h2')).toHaveText('Pet')
     }
 
     async deletePet(petName: string){
@@ -44,6 +35,7 @@ export class OwnerInformationPage extends HelperBase{
     async clickAddVisit(petName: string){
 
         await this.page.locator('app-pet-list', {hasText: petName}).getByText('Add Visit').click()
+        await expect(this.page.locator('h2')).toHaveText('New Visit')
 
     }
 
@@ -64,7 +56,7 @@ export class OwnerInformationPage extends HelperBase{
         await expect(this.page.locator('app-pet-list', {hasText: petName}).locator('app-visit-list tr td').first()).toHaveText(formatedDate)
     }
 
-    async compareOrderOfTopTwoVisitsByDate(petName: string){
+    async validateTwoLastVisitsInDesendOrder(petName: string){
         const petAppointments = this.page.locator('app-pet-list', {hasText: petName}).locator('app-visit-list tr')
         // Validate that the two appointments are listed in chronological order
         const petLaterAppointmentDate = await petAppointments.nth(1).locator('td').first().textContent()
@@ -72,6 +64,24 @@ export class OwnerInformationPage extends HelperBase{
         
         // The older appointment should be the smaller number
         expect(Date.parse(petInitialAppointmentDate!) < Date.parse(petLaterAppointmentDate!)).toBeTruthy()
+    }
+
+    async validatePhoneNumberAndPets(phoneNumber: string, petName: string){
+        // Validate that the phone number is listed correctly
+        await expect(this.page.getByRole('row', {name: 'Telephone'}).getByRole('cell').last()).toHaveText(phoneNumber)
+
+        // Validate the correct pet name by finding 'name' in the first pet information table
+        await expect(this.page.locator('div.container.xd-container').locator('dd').first()).toContainText(petName)
+    }
+
+    async validateOwnerName(ownerName: string){
+        await expect(this.page.locator('.ownerFullName')).toHaveText(ownerName)
+    }
+
+    async validatePetType(petName: string, petType: string){
+        const rosyPetType = this.page.getByText(petName).locator('..').locator('dd').last()
+        await expect(rosyPetType).toHaveText(petType)
+
     }
 
 }
