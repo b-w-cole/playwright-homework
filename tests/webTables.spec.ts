@@ -35,7 +35,7 @@ test.describe('Validate Owner Information', () => {
         const lastNamesToSearch = ['Black', 'Davis', 'Es', 'Playwright']
 
         for(const lastName of lastNamesToSearch){
-            await pm.onOwnersPage().searchForOwnerByLastName(lastName)
+            await pm.onOwnersPage().searchForOwnerByLastNameAndValidateOwnerExistsFor(lastName)
         }
         
     })
@@ -77,15 +77,14 @@ test('Validate specialty update', async ({ page }) => {
     const newSpecialty = 'dermatology'
 
     await pm.navigateTo().veterinariansPage()
-    await pm.onVeterinariansPage().validateSpecialty(testVet, oldSpecialty)
+    await pm.onVeterinariansPage().validateSpecialtyFor(testVet, oldSpecialty)
 
     await pm.navigateTo().specialtiesPage()
     await pm.onSpecialtiesPage().clickEditSpecialtyFor(oldSpecialty)
     await pm.onEditSpecialtyPage().updateSpecialty(oldSpecialty, newSpecialty)
-    expect(await pm.onSpecialtiesPage().validateExistenceOf(newSpecialty)).toBeTruthy()
 
     await pm.navigateTo().veterinariansPage()
-    await pm.onVeterinariansPage().validateSpecialty(testVet, newSpecialty)
+    await pm.onVeterinariansPage().validateSpecialtyFor(testVet, newSpecialty)
 
     await pm.navigateTo().specialtiesPage()
     await pm.onSpecialtiesPage().clickEditSpecialtyFor(newSpecialty)
@@ -103,28 +102,24 @@ test('Validate specialty lists', async ({ page }) => {
     await pm.navigateTo().specialtiesPage()
 
     await pm.onSpecialtiesPage().addSpecialty(testSpecialty)
-    expect(await pm.onSpecialtiesPage().validateExistenceOf(testSpecialty)).toBeTruthy()
-
-    const allSpecialties = await pm.onSpecialtiesPage().getAllSpecialties()
+    
+    const allSpecialties = await pm.onSpecialtiesPage().getAllSpecialtiesFromSpecialtiesPage()
 
     await pm.navigateTo().veterinariansPage()
     await pm.onVeterinariansPage().clickEditVeterinarianFor(testVet)
     
     const allSpecialtiesFromDropdown = await pm.onEditVeterinarianPage().getAllSpecialtiesFromDropdown()
-    
-    console.log(allSpecialties)
-    console.log(allSpecialtiesFromDropdown)
 
     expect(allSpecialtiesFromDropdown).toEqual(allSpecialties)
 
     await pm.onEditVeterinarianPage().selectSpecialty(testSpecialty)
     await pm.onEditVeterinarianPage().clickSaveVet()
-    await pm.onVeterinariansPage().validateSpecialty(testVet, testSpecialty)
+    await pm.onVeterinariansPage().validateSpecialtyFor(testVet, testSpecialty)
 
     await pm.navigateTo().specialtiesPage()
     await pm.onSpecialtiesPage().deleteSpecialty(testSpecialty)
 
     await pm.navigateTo().veterinariansPage()
-    await pm.onVeterinariansPage().validateSpecialty(testVet, '')
+    await pm.onVeterinariansPage().validateSpecialtyFor(testVet, '')
 
 })

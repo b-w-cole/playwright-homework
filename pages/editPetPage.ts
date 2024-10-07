@@ -20,6 +20,8 @@ export class EditPetPage extends HelperBase{
         // Iterate through each pet type option to validate that the pet is correctly listed in the textbox to the left 
         const allPetTypeOptions = await this.page.locator("option").allTextContents()
 
+        expect(allPetTypeOptions.length).toBeGreaterThan(0)
+
         for(const petType of allPetTypeOptions){
 
             await this.page.selectOption('select', petType)

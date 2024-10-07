@@ -36,4 +36,5 @@ export class HelperBase{
         const day = date.toLocaleString('En-US', {day: '2-digit'})
         return `${year}/${month}/${day}`
     }
+
 }

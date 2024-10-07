@@ -61,7 +61,6 @@ test('Pet type name is required validation', async ({page}) => {
   await pm.onPetTypeEditPage().fillPetType('')
 
   await pm.onPetTypeEditPage().updatePetType()
-  await pm.onPetTypeEditPage().updatePetType()
 
   await pm.onPetTypeEditPage().cancelPetTypeUpdate()
 

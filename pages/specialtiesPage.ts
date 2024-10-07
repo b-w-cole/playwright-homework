@@ -7,22 +7,27 @@ export class SpecialtiesPage extends HelperBase{
         super(page)
     }
 
-    async validateExistenceOf(specialty: string){
-        const entries = await this.page.getByRole('textbox').all()
-
-        for(let entry of entries){
-            if(specialty === await entry.inputValue()){
-                return true
-            }
-        }
-        return false
-
-    }
-
     async addSpecialty(specialty : string){
         await this.page.getByRole('button', {name: 'Add'}).click()
         await this.page.locator('#name').fill(specialty)
         await this.page.getByText('Save').click()
+
+        await this.page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/specialties*')
+
+        // Collect all specialties and store for later usage
+        const allSpecialties = await this.page.locator('tbody tr').getByRole('textbox').all()
+        expect(allSpecialties.length).toBeGreaterThan(0)
+        
+        const allSpecialtyValues: string[] = []
+        
+        // Iterate through all the rows to collect the Specialty and store in allSpecialties for future validation
+        for(let input of allSpecialties){
+            allSpecialtyValues.push(await input.inputValue())
+        }
+
+        // Confirm that the specialty is available on the page
+        expect(allSpecialtyValues).toContainEqual(specialty)
+        
     }
 
     async clickEditSpecialtyFor(specialty: string){
@@ -59,9 +64,8 @@ export class SpecialtiesPage extends HelperBase{
 
     }
 
-    async getAllSpecialties(){
-
-        await this.page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/specialties*')
+    // Used in specialtiesPage and editSpecialtyPage to validate addition or update of specialty entries
+    async getAllSpecialtiesFromSpecialtiesPage(){
 
         // Collect all specialties and store for later usage
         const allSpecialtyInputs = await this.page.locator('tbody tr').getByRole('textbox').all()
@@ -74,5 +78,4 @@ export class SpecialtiesPage extends HelperBase{
 
         return allSpecialties
     }
-
 }

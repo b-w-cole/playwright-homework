@@ -10,7 +10,7 @@ export class VeterinariansPage extends HelperBase{
         await this.page.getByRole('row', {name: name}).getByText('Edit Vet').click()
     }
 
-    async validateSpecialty(veterinarianName: string, specialty: string){
+    async validateSpecialtyFor(veterinarianName: string, specialty: string){
         await expect(this.page.getByRole('row', {name: veterinarianName}).getByRole('cell').nth(1)).toHaveText(specialty)
     }
 

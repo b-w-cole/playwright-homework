@@ -54,7 +54,7 @@ export class OwnersPage extends HelperBase{
 
     }
 
-    async searchForOwnerByLastName(ownerLastName: string){
+    async searchForOwnerByLastNameAndValidateOwnerExistsFor(ownerLastName: string){
         await this.page.getByRole('textbox').fill(ownerLastName)
         await this.page.getByText('Find Owner').click()
         
