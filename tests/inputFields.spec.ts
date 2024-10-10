@@ -19,7 +19,7 @@ test('Update pet type', async ({page}) => {
 
   await pm.onPetTypeEditPage().fillPetType(testPetType)
 
-  await pm.onPetTypeEditPage().updatePetType()
+  await pm.onPetTypeEditPage().clickUpdatePetType()
 
   await pm.onPetTypesPage().validatePetTypeEntryByIndex(testPetType, 0)
   
@@ -27,7 +27,7 @@ test('Update pet type', async ({page}) => {
   
   await pm.onPetTypeEditPage().fillPetType(originalPetType)
 
-  await pm.onPetTypeEditPage().updatePetType()
+  await pm.onPetTypeEditPage().clickUpdatePetType()
   
   await pm.onPetTypesPage().validatePetTypeEntryByIndex(originalPetType, 0)
 
@@ -60,7 +60,9 @@ test('Pet type name is required validation', async ({page}) => {
 
   await pm.onPetTypeEditPage().fillPetType('')
 
-  await pm.onPetTypeEditPage().updatePetType()
+  await pm.onPetTypeEditPage().clickUpdatePetType()
+
+  await pm.onPetTypeEditPage().validateEmptyPetTypeErrorMessage()
 
   await pm.onPetTypeEditPage().cancelPetTypeUpdate()
 

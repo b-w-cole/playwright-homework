@@ -18,14 +18,16 @@ export class PetTypeEditPage extends HelperBase{
         await expect(petTypeInputField).toHaveValue(petType)
     }
 
-    async updatePetType(){
-        const petTypeInputField = this.page.getByRole('textbox')
-
+    async clickUpdatePetType(){
         await this.page.getByText('Update').click()
+    }
 
+    async validateEmptyPetTypeErrorMessage(){
+        const petTypeInputField = this.page.getByRole('textbox')
         if(await petTypeInputField.inputValue() === ''){
             await expect(this.page.locator('div', {hasText: 'Name'}).last()).toHaveText('Name is required')
         }
+
     }
 
     async cancelPetTypeUpdate(){
