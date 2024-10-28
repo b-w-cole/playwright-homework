@@ -79,9 +79,31 @@ export class OwnerInformationPage extends HelperBase{
     }
 
     async validatePetType(petName: string, petType: string){
-        const rosyPetType = this.page.getByText(petName).locator('..').locator('dd').last()
-        await expect(rosyPetType).toHaveText(petType)
+        const recievedPetType = this.page.getByText(petName).locator('..').locator('dd').last()
+        await expect(recievedPetType).toHaveText(petType)
 
+    }
+
+    async validateOwnerInformationFromJSON(ownerObject: {}){
+
+        const ownerTable = this.page.getByRole('table').first()
+        await expect(ownerTable.locator('td').first()).toHaveText(`${ownerObject['firstName']} ${ownerObject['lastName']}`)
+        await expect(ownerTable.locator('td').nth(1)).toHaveText(ownerObject['address'])
+        await expect(ownerTable.locator('td').nth(2)).toHaveText(ownerObject['city'])
+        await expect(ownerTable.locator('td').last()).toHaveText(ownerObject['telephone'])
+    }
+
+    async validatePetNamesFromJSON(petObjectList: {}[]){
+
+        for(let petObject of petObjectList){
+            await expect(this.page.getByRole('table').nth(1)).toContainText(petObject['name'])
+        }
+
+    }
+
+    async validateNumberOfVisits(visitsCount: number){
+        const countWithTableHeader = visitsCount + 1
+        await expect(this.page.getByRole('table').nth(3).getByRole('row')).toHaveCount(countWithTableHeader)
     }
 
 }

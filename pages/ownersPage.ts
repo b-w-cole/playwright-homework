@@ -9,7 +9,6 @@ export class OwnersPage extends HelperBase{
 
     async getOwnerRow(owner : string){
         await this.page.waitForSelector('tbody')
-        console.log(await this.page.getByRole('row', {name: owner}).allTextContents())
         return this.page.getByRole('row', {name: owner})
     }
 
@@ -83,6 +82,12 @@ export class OwnersPage extends HelperBase{
 
     async getOwnerByPhoneNumber(phoneNumber: string){
         return this.page.getByRole('row', {name: phoneNumber}).getByRole('link').textContent()
+    }
+
+    async validateOwnerCount(numberOfOwners: number){
+        await this.page.waitForSelector('tbody')
+
+        await expect(this.page.locator('tbody').locator('.ownerFullName')).toHaveCount(numberOfOwners)
     }
 
 }
