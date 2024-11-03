@@ -95,14 +95,15 @@ export class OwnerInformationPage extends HelperBase{
     }
 
     async validatePetNamesArePresentFromListOfPetNames(petNames: string[]){
+        const allPetInformationTables = await this.page.locator('table app-pet-list').all()
 
-        for(let petName of petNames){
-            await expect(this.page.getByRole('table').nth(1)).toContainText(petName)
+        for(let i in petNames){
+            await expect(allPetInformationTables[i]).toContainText(petNames[i])
         }
     }
 
-    async validateNumberOfVisits(visitsCount: number){
-        await expect(this.page.getByRole('table').nth(3).getByRole('row', {name: 'Edit Visit'})).toHaveCount(visitsCount)
+    async validateNumberOfVisitsForPet(petName: string, visitsCount: number){
+        expect((await this.page.locator('table app-pet-list', {hasText: petName}).locator('app-visit-list').getByRole('row').all()).slice(1)).toHaveLength(visitsCount)
     }
 
 }
