@@ -84,26 +84,25 @@ export class OwnerInformationPage extends HelperBase{
 
     }
 
-    async validateOwnerInformationFromJSON(ownerObject: {}){
+    async validateOwnerInformation(firstName: string, lastName: string, address: string, city: string, telephone: string){       
+        const ownerTable = this.page.getByRole('table').filter({hasText: 'Address'})
 
-        const ownerTable = this.page.getByRole('table').first()
-        await expect(ownerTable.locator('td').first()).toHaveText(`${ownerObject['firstName']} ${ownerObject['lastName']}`)
-        await expect(ownerTable.locator('td').nth(1)).toHaveText(ownerObject['address'])
-        await expect(ownerTable.locator('td').nth(2)).toHaveText(ownerObject['city'])
-        await expect(ownerTable.locator('td').last()).toHaveText(ownerObject['telephone'])
+        await expect(ownerTable.getByRole('row', {name: 'Name'})).toContainText(`${firstName} ${lastName}`)
+        await expect(ownerTable.getByRole('row', {name: 'Address'})).toContainText(address)
+        await expect(ownerTable.getByRole('row', {name: 'City'})).toContainText(city)
+        await expect(ownerTable.getByRole('row', {name: 'Telephone'})).toContainText(telephone)
+        
     }
 
-    async validatePetNamesFromJSON(petObjectList: {}[]){
+    async validatePetNamesArePresentFromListOfPetNames(petNames: string[]){
 
-        for(let petObject of petObjectList){
-            await expect(this.page.getByRole('table').nth(1)).toContainText(petObject['name'])
+        for(let petName of petNames){
+            await expect(this.page.getByRole('table').nth(1)).toContainText(petName)
         }
-
     }
 
     async validateNumberOfVisits(visitsCount: number){
-        const countWithTableHeader = visitsCount + 1
-        await expect(this.page.getByRole('table').nth(3).getByRole('row')).toHaveCount(countWithTableHeader)
+        await expect(this.page.getByRole('table').nth(3).getByRole('row', {name: 'Edit Visit'})).toHaveCount(visitsCount)
     }
 
 }
