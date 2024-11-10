@@ -84,26 +84,36 @@ export class OwnerInformationPage extends HelperBase{
 
     }
 
-    async validateOwnerInformation(firstName: string, lastName: string, address: string, city: string, telephone: string){       
+    async validateOwnerInformation(fullName: string, address: string, city: string, telephone: string){       
         const ownerTable = this.page.getByRole('table').filter({hasText: 'Address'})
 
-        await expect(ownerTable.getByRole('row', {name: 'Name'})).toContainText(`${firstName} ${lastName}`)
+        await expect(ownerTable.getByRole('row', {name: 'Name'})).toContainText(fullName)
         await expect(ownerTable.getByRole('row', {name: 'Address'})).toContainText(address)
         await expect(ownerTable.getByRole('row', {name: 'City'})).toContainText(city)
         await expect(ownerTable.getByRole('row', {name: 'Telephone'})).toContainText(telephone)
         
     }
 
-    async validatePetNamesArePresentFromListOfPetNames(petNames: string[]){
-        const allPetInformationTables = await this.page.locator('table app-pet-list').all()
+    async validatePetNamesArePresentFromListOfPets(pets: {}[]){
+        const petsAndVistsTables = await this.page.locator('table app-pet-list').all()
 
+        // Extracting all pet names from API Mock into a list
+        const petNames: string[] = []
+        for(let pet of pets){
+            petNames.push(pet.name)
+        }
+
+        // Validating pet names are in table
         for(let i in petNames){
-            await expect(allPetInformationTables[i]).toContainText(petNames[i])
+            await expect(petsAndVistsTables[i]).toContainText(petNames[i])
         }
     }
 
-    async validateNumberOfVisitsForPet(petName: string, visitsCount: number){
-        expect((await this.page.locator('table app-pet-list', {hasText: petName}).locator('app-visit-list').getByRole('row').all()).slice(1)).toHaveLength(visitsCount)
+    async validateNumberOfVisitsForPetName(petName: string, visitsCount: number){
+        const petTable = this.page.locator('table app-pet-list', {hasText: petName})
+        const petVisitsList = (await petTable.locator('app-visit-list').getByRole('row').all()).slice(1)
+        
+        expect(petVisitsList).toHaveLength(visitsCount)
     }
 
 }

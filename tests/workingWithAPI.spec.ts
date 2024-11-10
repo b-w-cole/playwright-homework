@@ -19,7 +19,7 @@ test.beforeEach( async({page}) => {
 
 });
 
-test('mocking API request', async ({page}) => {
+test('Mocking API request', async ({page}) => {
     const pm = new PageManager(page)
     
     await pm.navigateTo().ownersPage()
@@ -27,19 +27,15 @@ test('mocking API request', async ({page}) => {
     await pm.onOwnersPage().validateOwnerCount(2)
 
     // Extracting full name from API Mock to click on link in 
-    const testOwnerFullName = `${testOwners[0]['firstName']} ${testOwners[0]['lastName']}`    
+    const owner = testOwners.find(owner => owner.id === 1)
+    const testOwnerFullName: string = `${owner?.firstName} ${owner?.lastName}`
     await pm.onOwnersPage().clickOwnerNameFor(testOwnerFullName)
     
-    await pm.onOwnerInformationPage().validateOwnerInformation(testOwners[0]['firstName'], testOwners[0]['lastName'], testOwners[0]['address'], testOwners[0]['city'], testOwners[0]['telephone'])
+    await pm.onOwnerInformationPage().validateOwnerInformation(testOwnerFullName, owner?.address!, owner?.city!, owner?.telephone!)
 
-    // Extracting all pet names from API Mock into a list
-    const petNameList: string[] = []
-    for(let pet of testOwners[0]['pets']){
-        petNameList.push(pet['name'])
-    }
-    await pm.onOwnerInformationPage().validatePetNamesArePresentFromListOfPetNames(petNameList)
+    await pm.onOwnerInformationPage().validatePetNamesArePresentFromListOfPets(owner?.pets!)
     
     // First pet in list should have 10 visits
-    const testPetName = petNameList[0]
-    await pm.onOwnerInformationPage().validateNumberOfVisitsForPet(testPetName, 10)
+    const pet = owner?.pets.find(pet => pet.id === 1)
+    await pm.onOwnerInformationPage().validateNumberOfVisitsForPetName(pet?.name!, 10)
 })
