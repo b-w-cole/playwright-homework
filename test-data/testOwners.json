@@ -1,0 +1,160 @@
+[
+    {
+        "firstName": "Bob",
+        "lastName": "Smith",
+        "address": "1234 Main St",
+        "city": "Minneapolis",
+        "telephone": "5552928477",
+        "id": 1,
+        "pets": [
+            {
+                "name": "Felix",
+                "birthDate": "2019-07-9",
+                "type": {
+                    "name": "cat",
+                    "id": 142
+                },
+                "id": 1,
+                "ownerId": 1,
+                "visits": [
+                    {
+                        "date": "2019-09-01",
+                        "description": "routine shots",
+                        "id": 1,
+                        "petId": null
+                    },
+                    {
+                        "date": "2019-09-19",
+                        "description": "booster shots",
+                        "id": 2,
+                        "petId": null
+                    },
+                    {
+                        "date": "2020-01-13",
+                        "description": "neutered",
+                        "id": 3,
+                        "petId": null
+                    },
+                    {
+                        "date": "2020-02-17",
+                        "description": "cold-like symptoms",
+                        "id": 4,
+                        "petId": null
+                    },
+                    {
+                        "date": "2020-06-02",
+                        "description": "allergy follow-up",
+                        "id": 5,
+                        "petId": null
+                    },
+                    {
+                        "date": "2021-10-14",
+                        "description": "flea treatment",
+                        "id": 6,
+                        "petId": null
+                    },
+                    {
+                        "date": "2022-08-21",
+                        "description": "dermatology",
+                        "id": 7,
+                        "petId": null
+                    },
+                    {
+                        "date": "2022-09-20",
+                        "description": "dermatology follow-up",
+                        "id": 8,
+                        "petId": null
+                    },
+                    {
+                        "date": "2023-01-04",
+                        "description": "feeding issues",
+                        "id": 9,
+                        "petId": null
+                    },
+                    {
+                        "date": "2023-01-15",
+                        "description": "imaging",
+                        "id": 10,
+                        "petId": null
+                    }
+                ]
+            },
+            {
+                "name": "Snoopy",
+                "birthDate": "2020-4-29",
+                "type": {
+                    "name": "dog",
+                    "id": 143
+                },
+                "id": 2,
+                "ownerId": 1,
+                "visits": []
+            }
+        ]
+    },
+    {
+        "firstName": "Arnold",
+        "lastName": "Doulapolis",
+        "address": "456 Southwestern Ave",
+        "city": "Buffalo",
+        "telephone": "55571594833",
+        "id": 2,
+        "pets": [
+            {
+                "name": "Max",
+                "birthDate": "2024-03-30",
+                "type": {
+                    "name": "snake",
+                    "id": 145
+                },
+                "id": 3,
+                "ownerId": 2,
+                "visits": []
+            },
+            {
+                "name": "Fido",
+                "birthDate": "1999-1-23",
+                "type": {
+                    "name": "dog",
+                    "id": 143
+                },
+                "id": 4,
+                "ownerId": 2,
+                "visits": []
+            },
+            {
+                "name": "Smalls",
+                "birthDate": "2023-12-15",
+                "type": {
+                    "name": "hamster",
+                    "id": 252
+                },
+                "id": 5,
+                "ownerId": 2,
+                "visits": []
+            },
+            {
+                "name": "Sky",
+                "birthDate": "1989-05-16",
+                "type": {
+                    "name": "bird",
+                    "id": 146
+                },
+                "id": 6,
+                "ownerId": 2,
+                "visits": []
+            },
+            {
+                "name": "Missy",
+                "birthDate": "2010-7-06",
+                "type": {
+                    "name": "lizard",
+                    "id": 144
+                },
+                "id": 7,
+                "ownerId": 2,
+                "visits": []
+            }
+        ]
+    }
+]

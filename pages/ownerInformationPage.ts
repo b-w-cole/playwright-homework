@@ -79,9 +79,35 @@ export class OwnerInformationPage extends HelperBase{
     }
 
     async validatePetType(petName: string, petType: string){
-        const rosyPetType = this.page.getByText(petName).locator('..').locator('dd').last()
-        await expect(rosyPetType).toHaveText(petType)
+        const recievedPetType = this.page.getByText(petName).locator('..').locator('dd').last()
+        await expect(recievedPetType).toHaveText(petType)
 
+    }
+
+    async validateOwnerInformation(fullName: string, address: string, city: string, telephone: string){       
+        const ownerTable = this.page.getByRole('table').filter({hasText: 'Address'})
+
+        await expect(ownerTable.getByRole('row', {name: 'Name'})).toContainText(fullName)
+        await expect(ownerTable.getByRole('row', {name: 'Address'})).toContainText(address)
+        await expect(ownerTable.getByRole('row', {name: 'City'})).toContainText(city)
+        await expect(ownerTable.getByRole('row', {name: 'Telephone'})).toContainText(telephone)
+        
+    }
+
+    async validatePetNamesArePresentFromListOfPetNames(petNames: string[]){
+        const petsAndVistsTables = await this.page.locator('table app-pet-list').all()
+
+        // Validating pet names are in table
+        for(let i in petNames){
+            await expect(petsAndVistsTables[i]).toContainText(petNames[i])
+        }
+    }
+
+    async validateNumberOfVisitsForPetName(petName: string, visitsCount: number){
+        const petTable = this.page.locator('table app-pet-list', {hasText: petName})
+        const petVisitsList = (await petTable.locator('app-visit-list').getByRole('row').all()).slice(1)
+        
+        expect(petVisitsList).toHaveLength(visitsCount)
     }
 
 }
