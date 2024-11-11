@@ -94,14 +94,8 @@ export class OwnerInformationPage extends HelperBase{
         
     }
 
-    async validatePetNamesArePresentFromListOfPets(pets: {}[]){
+    async validatePetNamesArePresentFromListOfPetNames(petNames: string[]){
         const petsAndVistsTables = await this.page.locator('table app-pet-list').all()
-
-        // Extracting all pet names from API Mock into a list
-        const petNames: string[] = []
-        for(let pet of pets){
-            petNames.push(pet.name)
-        }
 
         // Validating pet names are in table
         for(let i in petNames){
