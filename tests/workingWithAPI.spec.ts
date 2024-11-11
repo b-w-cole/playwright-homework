@@ -1,6 +1,7 @@
 import { test } from '@playwright/test';
 import { PageManager } from '../pages/pageManager'
 import testOwners from '../test-data/testOwners.json'
+import testVetSpecialties from '../test-data/testVetSpecialties.json'
 
 test.beforeEach( async({page}) => {
     page.route('*/**/owners', async route => {
@@ -15,11 +16,24 @@ test.beforeEach( async({page}) => {
         })    
     })
 
-    await page.goto('/')
+    await page.route('*/**/api/vets*', async route => {
+        const response = await route.fetch()
+        const responseBody = await response.json()
 
+        const vet = responseBody.find(vet => vet.firstName === 'Sharon')
+        vet.specialties = testVetSpecialties
+
+        await route.fulfill({
+            body: JSON.stringify(responseBody)
+        })
+
+    })
+
+    await page.goto('/')
 });
 
 test('Mocking API request', async ({page}) => {
+
     const pm = new PageManager(page)
     
     await pm.navigateTo().ownersPage()
@@ -38,4 +52,11 @@ test('Mocking API request', async ({page}) => {
     
     // First pet in list should have 10 visits
     await pm.onOwnerInformationPage().validateNumberOfVisitsForPetName(petNames[0], 10)
+})
+
+test('Intercepting API Response', async({page}) => {
+    const pm = new PageManager(page)
+    await pm.navigateTo().veterinariansPage()
+
+    await pm.onVeterinariansPage().validateSpecialtyCountFor('Sharon Jenkins', 10)
 })

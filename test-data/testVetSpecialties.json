@@ -1,0 +1,42 @@
+[
+    {
+        "id": 155,
+        "name": "radiology"
+    },
+    {
+        "id": 156,
+        "name": "surgery"
+    },
+    {
+        "id": 157,
+        "name": "dentistry"
+    },
+    {
+        "id": 278,
+        "name": "nail trims"
+    },
+    {
+        "id": 1054,
+        "name": "oncology"
+    },
+    {
+        "id": 1,
+        "name": "behavior"
+    },
+    {
+        "id": 2,
+        "name": "neurology"
+    },
+    {
+        "id": 3,
+        "name": "pharmacology"
+    },
+    {
+        "id": 4,
+        "name": "nutrition"
+    },
+    {
+        "id": 5,
+        "name": "pathology"
+    }
+]
