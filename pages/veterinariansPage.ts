@@ -19,6 +19,6 @@ export class VeterinariansPage extends HelperBase{
         const vetSpecialties = await vetRow.getByRole('cell').nth(1).textContent()
         const specialtiesArray = vetSpecialties?.split('  ')
 
-        expect(specialtiesArray?.length).toEqual(count)
+        expect(specialtiesArray).toHaveLength(count)
     }
 }
