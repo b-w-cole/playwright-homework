@@ -62,7 +62,12 @@ export class SpecialtiesPage extends HelperBase{
             }
         }
 
+        await this.page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/specialties/*')
+        
+        const specialties = await this.getAllSpecialtiesFromSpecialtiesPage()
+        expect(specialties).not.toContainEqual(specialty)
     }
+
 
     // Used in specialtiesPage and editSpecialtyPage to validate addition or update of specialty entries
     async getAllSpecialtiesFromSpecialtiesPage(){
@@ -77,5 +82,13 @@ export class SpecialtiesPage extends HelperBase{
         }
 
         return allSpecialties
+    }
+
+    async validateSpecialtyExistsFor(specialty: string){
+
+        const allSpecialties = await this.getAllSpecialtiesFromSpecialtiesPage()
+
+        expect(allSpecialties).toContainEqual(specialty)
+
     }
 }

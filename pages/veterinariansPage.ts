@@ -17,8 +17,13 @@ export class VeterinariansPage extends HelperBase{
     async validateSpecialtyCountFor(veterinarianName: string, count: number){
         const vetRow = this.page.getByRole('row', {name: veterinarianName})
         const vetSpecialties = await vetRow.getByRole('cell').nth(1).textContent()
-        const specialtiesArray = vetSpecialties?.split('  ')
+        const specialtiesArray = vetSpecialties?.split('  ')!
 
-        expect(specialtiesArray).toHaveLength(count)
+        let specialtiesLength = specialtiesArray.length
+        if(specialtiesLength == 1 && specialtiesArray[0] === ''){
+            specialtiesLength = 0
+        }
+        
+        expect(specialtiesLength).toEqual(count)
     }
 }
