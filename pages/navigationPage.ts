@@ -11,7 +11,6 @@ export class NavigationPage{
         await this.page.getByText("Veterinarians").click();
         await this.page.getByText("All").click()
         await expect(this.page.locator('h2')).toHaveText('Veterinarians')
-        await this.page.waitForSelector('tbody')
     }
 
     async ownersPage(){
@@ -32,6 +31,10 @@ export class NavigationPage{
         await this.page.waitForSelector('tbody')
         await expect(this.page.locator('h2')).toHaveText('Specialties')
         await this.page.waitForSelector('tbody')
+    }
+
+    async home(){
+        await this.page.getByRole('link', {name: 'Home'}).click()
     }
 
 }
