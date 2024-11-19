@@ -11,6 +11,7 @@ import { EditVeterinarianPage } from "./editVeterinarianPage"
 import { VeterinariansPage } from "./veterinariansPage"
 import { NewVisitPage } from "./newVisitPage"
 import { EditSpecialtyPage } from "./editSpecialtyPage"
+import { NewOwnerPage } from "./newOwnerPage"
 
 export class PageManager{
 
@@ -19,6 +20,7 @@ export class PageManager{
     private readonly editSpecialtyPage: EditSpecialtyPage
     private readonly editVeterinarianPage : EditVeterinarianPage
     private readonly navigationPage : NavigationPage
+    private readonly newOwnerPage: NewOwnerPage
     private readonly newVisitPage : NewVisitPage
     private readonly ownersPage : OwnersPage
     private readonly ownerInformationPage : OwnerInformationPage
@@ -33,6 +35,7 @@ export class PageManager{
         this.editSpecialtyPage = new EditSpecialtyPage(page)
         this.editVeterinarianPage = new EditVeterinarianPage(page)
         this.navigationPage = new NavigationPage(page)
+        this.newOwnerPage = new NewOwnerPage(page)
         this.newVisitPage = new NewVisitPage(page)
         this.ownersPage = new OwnersPage(page)
         this.ownerInformationPage = new OwnerInformationPage(page)
@@ -60,6 +63,10 @@ export class PageManager{
 
     onEditVeterinarianPage(){
         return this.editVeterinarianPage
+    }
+
+    onNewOwnerPage(){
+        return this.newOwnerPage
     }
 
     onNewVisitPage(){
