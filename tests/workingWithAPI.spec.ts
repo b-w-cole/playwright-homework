@@ -1,9 +1,15 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { PageManager } from '../pages/pageManager'
 import testOwners from '../test-data/testOwners.json'
 import testVetSpecialties from '../test-data/testVetSpecialties.json'
 
 test.beforeEach( async({page}) => {
+    
+    await page.goto('/')
+});
+
+test('Mocking API request', async ({page}) => {
+
     page.route('*/**/owners', async route => {
         await route.fulfill({
             body: JSON.stringify(testOwners)
@@ -15,24 +21,6 @@ test.beforeEach( async({page}) => {
             body: JSON.stringify(testOwners[0])
         })    
     })
-
-    await page.route('*/**/api/vets*', async route => {
-        const response = await route.fetch()
-        const responseBody = await response.json()
-
-        const vet = responseBody.find(vet => vet.firstName === 'Sharon')
-        vet.specialties = testVetSpecialties
-
-        await route.fulfill({
-            body: JSON.stringify(responseBody)
-        })
-
-    })
-
-    await page.goto('/')
-});
-
-test('Mocking API request', async ({page}) => {
 
     const pm = new PageManager(page)
     
@@ -55,8 +43,49 @@ test('Mocking API request', async ({page}) => {
 })
 
 test('Intercepting API Response', async({page}) => {
+    await page.route('*/**/api/vets*', async route => {
+        const response = await route.fetch()
+        const responseBody = await response.json()
+
+        const vet = responseBody.find(vet => vet.firstName === 'Sharon')
+        vet.specialties = testVetSpecialties
+
+        await route.fulfill({
+            body: JSON.stringify(responseBody)
+        })
+
+    })
+
     const pm = new PageManager(page)
     await pm.navigateTo().veterinariansPage()
 
     await pm.onVeterinariansPage().validateSpecialtyCountFor('Sharon Jenkins', 10)
+})
+
+test('Add and delete an owner', async({page, request}) => {
+
+    const firstName = 'Wilma'
+    const lastName = 'Flinstone'
+    const fullName = `${firstName} ${lastName}`
+    const address = '1234 Main St'
+    const city = 'Madison'
+    const telephone = '5555555555'
+
+    const pm = new PageManager(page)
+    await pm.navigateTo().ownersPage()
+
+    await pm.onOwnersPage().clickAddOwner()
+ 
+    await pm.onNewOwnerPage().addNewOwner(firstName, lastName, address, city, telephone)
+
+    const response = await page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/owners*')
+    const ownerID = (await response.json()).id
+
+    await pm.onOwnersPage().validateOwnerInformation(fullName, address, city, telephone)
+
+    await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/owners/${ownerID}`)
+    await page.reload()
+
+    await pm.onOwnersPage().validateOwnerDoesntExist(fullName)
+
 })

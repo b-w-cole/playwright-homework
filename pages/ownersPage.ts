@@ -16,6 +16,10 @@ export class OwnersPage extends HelperBase{
         await this.page.getByText(ownerName).click()
     }
 
+    async clickAddOwner(){
+        await this.page.getByRole('button', {name: 'Add Owner'}).click()
+    }
+
     async validatePetAndCityOfOwner(owner: string, petName: string, city: string){
         const row = this.page.getByRole('row', {name: owner})
     
@@ -90,4 +94,15 @@ export class OwnersPage extends HelperBase{
         await expect(this.page.locator('tbody').locator('.ownerFullName')).toHaveCount(numberOfOwners)
     }
 
+    async validateOwnerInformation(fullName, address: string, city: string, telephone: string){
+        const row = this.page.getByRole('row', {name: fullName})
+
+        await expect(row).toContainText(address)
+        await expect(row).toContainText(city)
+        await expect(row).toContainText(telephone)
+    }
+
+    async validateOwnerDoesntExist(ownerName: string){
+        await expect(this.page.getByRole('table')).not.toContainText(ownerName)
+    }
 }
