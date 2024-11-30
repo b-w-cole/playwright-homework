@@ -64,8 +64,7 @@ export class SpecialtiesPage extends HelperBase{
 
         await this.page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/specialties/*')
         
-        const specialties = await this.getAllSpecialtiesFromSpecialtiesPage()
-        expect(specialties).not.toContainEqual(specialty)
+        await this.validateExistenceOfSpecialtyName(specialty, false)
     }
 
 
@@ -84,11 +83,17 @@ export class SpecialtiesPage extends HelperBase{
         return allSpecialties
     }
 
-    async validateSpecialtyExistsFor(specialty: string){
+    async validateExistenceOfSpecialtyName(specialty: string, shouldExist: boolean){
 
         const allSpecialties = await this.getAllSpecialtiesFromSpecialtiesPage()
 
-        expect(allSpecialties).toContainEqual(specialty)
-
+        if(shouldExist){
+            expect(allSpecialties).toContainEqual(specialty)
+        }
+        else{
+            expect(allSpecialties).not.toContainEqual(specialty)
+        }
     }
+
+
 }

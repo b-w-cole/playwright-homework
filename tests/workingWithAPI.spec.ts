@@ -1,5 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { PageManager } from '../pages/pageManager'
+import { APIHelper } from '../pages/apiHelper';
 import testOwners from '../test-data/testOwners.json'
 import testVetSpecialties from '../test-data/testVetSpecialties.json'
 
@@ -64,26 +65,28 @@ test('Intercepting API Response', async({page}) => {
 
 test('Add and delete an owner', async({page, request}) => {
 
-    const firstName = 'Wilma'
-    const lastName = 'Flinstone'
+    const firstName = 'Test'
+    const lastName = 'Tester'
     const fullName = `${firstName} ${lastName}`
     const address = '1234 Main St'
     const city = 'Madison'
     const telephone = '5555555555'
 
     const pm = new PageManager(page)
+    const apiHelper = new APIHelper(request)
+
     await pm.navigateTo().ownersPage()
 
     await pm.onOwnersPage().clickAddOwner()
  
     await pm.onNewOwnerPage().addNewOwner(firstName, lastName, address, city, telephone)
 
-    const response = await page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/owners*')
-    const ownerID = (await response.json()).id
+    const ownerID = await apiHelper.getOwnerIDFromOwnerCreationResponse(page)
 
     await pm.onOwnersPage().validateOwnerInformation(fullName, address, city, telephone)
 
-    await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/owners/${ownerID}`)
+    await apiHelper.deleteOwner(ownerID)
+
     await page.reload()
 
     await pm.onOwnersPage().validateOwnerDoesntExist(fullName)

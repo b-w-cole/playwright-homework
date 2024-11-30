@@ -1,5 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { PageManager } from '../pages/pageManager'
+import { APIHelper } from '../pages/apiHelper';
 
 
 test.beforeEach( async({page}) => {
@@ -7,19 +8,17 @@ test.beforeEach( async({page}) => {
 });
 
 test('Delete Specialty', async ({page, request}) =>{
+
     const specialtyName = "api testing expert"
-    const specialtiesResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/specialties', {
-        data: {
-            name: specialtyName
-        }
-    })
-    expect(specialtiesResponse.status()).toEqual(201)
-      
+
     const pm = new PageManager(page)
+    const apiHelper = new APIHelper(request)  
+
+    await apiHelper.createSpecialtyAndGetID(specialtyName)
 
     await pm.navigateTo().specialtiesPage()
 
-    await pm.onSpecialtiesPage().validateSpecialtyExistsFor(specialtyName)
+    await pm.onSpecialtiesPage().validateExistenceOfSpecialtyName(specialtyName, true)
     
     await pm.onSpecialtiesPage().deleteSpecialty(specialtyName)
     
@@ -28,22 +27,14 @@ test('Delete Specialty', async ({page, request}) =>{
 test('Add and Delete Veterinarian', async ({page, request}) => {
     const firstName = 'Paula'
     const lastName = 'Hutchinson'
-    const specialty = 'dentistry'
-
-    // Create a new veterinarian
-    const veterinarianCreationResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/vets',{
-        data: {
-            'id': null,
-            'firstName': firstName,
-            'lastName': lastName,
-            'specialties': []
-        }
-    })
-
-    // Select and validate specialty for new Vet
-    const vetID = (await veterinarianCreationResponse.json()).id
+    const originalSpecialties = []
+    const newSpecialty = 'dentistry'
+    
     
     const pm = new PageManager(page)
+    const apiHelper = new APIHelper(request)
+
+    const vetID = await apiHelper.createNewVeteranarianAndGetID(firstName, lastName, originalSpecialties)
 
     await pm.navigateTo().veterinariansPage()
 
@@ -51,21 +42,15 @@ test('Add and Delete Veterinarian', async ({page, request}) => {
 
     await pm.onVeterinariansPage().clickEditVeterinarianFor(lastName)
 
-    await pm.onEditVeterinarianPage().selectSpecialty(specialty)
+    await pm.onEditVeterinarianPage().selectSpecialty(newSpecialty)
 
     await pm.onEditVeterinarianPage().clickSaveVet()
 
-    await pm.onVeterinariansPage().validateSpecialtyFor(lastName, specialty)
+    await pm.onVeterinariansPage().validateSpecialtyFor(lastName, newSpecialty)
 
-    // Delete the veterinarian by API
-    const deleteResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/vets/${vetID}`)
-    expect(deleteResponse.status()).toEqual(204)
+    await apiHelper.deleteVeterinarian(vetID)
 
-    // Get a list of veterinarians by API and validate that our test vet isn't among them
-    const getVeterinariansResponse = await request.get('https://petclinic-api.bondaracademy.com/petclinic/api/vets')
-    const responseBody = await getVeterinariansResponse.json()
-    const testVeterinarian = await responseBody.find(vet => vet.firstName === firstName)
-    expect(testVeterinarian).toEqual(undefined)
+    await apiHelper.validateVeterinarianDoesNotExist(vetID)
 
 })
 
@@ -73,41 +58,24 @@ test('New Specialty is Displayed', async ({page, request}) => {
     const firstName = 'Leroy'
     const lastName = 'Jenkins'
     const newSpecialtyName = "api testing ninja"
-    const oldSpecialtyJSON = {
-        'id': 156, 
-        'name': 'surgery'
-    }
-
-    // Create a new specialty
-    const specialtiesResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/specialties', {
-        data: {
-            name: newSpecialtyName
-        }
-    })
-    const newSpecialtyID = (await specialtiesResponse.json()).id
-    expect(specialtiesResponse.status()).toEqual(201)
-
-    // Create a test veterinarian
-    const veterinarianCreationResponse = await request.post('https://petclinic-api.bondaracademy.com/petclinic/api/vets',{
-        data: {
-            'id': null,
-            'firstName': firstName,
-            'lastName': lastName,
-            'specialties': [oldSpecialtyJSON]
-        }
-    })
-    const vetID = (await veterinarianCreationResponse.json()).id
-    expect(veterinarianCreationResponse.status()).toEqual(201)
+    const oldSpecialtyName = 'surgery'
 
     // Select the new specialty and remove the old one for the test vet
     const pm = new PageManager(page)
+    const apiHelper = new APIHelper(request)
+
+    const oldSpecialtyJSON = await apiHelper.getSpecialtyJSON(oldSpecialtyName)
+    
+    const veterinarianID  = await apiHelper.createNewVeteranarianAndGetID(firstName, lastName, [oldSpecialtyJSON])
+
+    const newSpecialtyID = await apiHelper.createSpecialtyAndGetID(newSpecialtyName)
 
     await pm.navigateTo().veterinariansPage()
 
     await pm.onVeterinariansPage().validateSpecialtyFor(firstName, oldSpecialtyJSON.name)
 
     await pm.onVeterinariansPage().clickEditVeterinarianFor(firstName)
-    
+
     await pm.onEditVeterinarianPage().selectSpecialty(newSpecialtyName)
 
     await pm.onEditVeterinarianPage().deselectSpecialty(oldSpecialtyJSON.name)
@@ -117,11 +85,9 @@ test('New Specialty is Displayed', async ({page, request}) => {
     await pm.onVeterinariansPage().validateSpecialtyFor(firstName, newSpecialtyName)
 
     // Delete the test vet before deleting the new specialty
-    const deleteVeterinarianResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/vets/${vetID}`)
-    expect(deleteVeterinarianResponse.status()).toEqual(204)
+    await apiHelper.deleteVeterinarian(veterinarianID)
 
     // Delete the new specialty
-    const deleteSpecialtyResponse = await request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/specialties/${newSpecialtyID}`)
-    expect(deleteSpecialtyResponse.status()).toEqual(204)
+    await apiHelper.deleteSpecialty(newSpecialtyID)
 
 })
