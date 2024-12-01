@@ -16,9 +16,15 @@ export class VeterinariansPage extends HelperBase{
 
     async validateSpecialtyCountFor(veterinarianName: string, count: number){
         const vetRow = this.page.getByRole('row', {name: veterinarianName})
-        const vetSpecialties = await vetRow.getByRole('cell').nth(1).textContent()
-        const specialtiesArray = vetSpecialties?.split('  ')
 
-        expect(specialtiesArray).toHaveLength(count)
+        await this.page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/vets*')
+
+        const vetSpecialties = await vetRow.getByRole('cell').nth(1).textContent()
+        if(count == 0){
+            expect(vetSpecialties).toHaveLength(0)
+        }
+        else{
+            expect(vetSpecialties?.split('  ')).toHaveLength(count)
+        }
     }
 }

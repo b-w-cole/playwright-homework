@@ -37,6 +37,7 @@ export class PageManager{
         this.navigationPage = new NavigationPage(page)
         this.newOwnerPage = new NewOwnerPage(page)
         this.newVisitPage = new NewVisitPage(page)
+        this.newOwnerPage = new NewOwnerPage(page)
         this.ownersPage = new OwnersPage(page)
         this.ownerInformationPage = new OwnerInformationPage(page)
         this.petTypeEditPage = new PetTypeEditPage(page)

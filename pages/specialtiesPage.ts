@@ -62,7 +62,11 @@ export class SpecialtiesPage extends HelperBase{
             }
         }
 
+        await this.page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/specialties/*')
+        
+        await this.validateExistenceOfSpecialtyName(specialty, false)
     }
+
 
     // Used in specialtiesPage and editSpecialtyPage to validate addition or update of specialty entries
     async getAllSpecialtiesFromSpecialtiesPage(){
@@ -78,4 +82,18 @@ export class SpecialtiesPage extends HelperBase{
 
         return allSpecialties
     }
+
+    async validateExistenceOfSpecialtyName(specialty: string, shouldExist: boolean){
+
+        const allSpecialties = await this.getAllSpecialtiesFromSpecialtiesPage()
+
+        if(shouldExist){
+            expect(allSpecialties).toContainEqual(specialty)
+        }
+        else{
+            expect(allSpecialties).not.toContainEqual(specialty)
+        }
+    }
+
+
 }
