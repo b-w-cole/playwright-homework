@@ -79,13 +79,11 @@ test('Add and delete an owner', async({page, request}) => {
 
     await pm.onOwnersPage().clickAddOwner()
  
-    await pm.onNewOwnerPage().addNewOwner(firstName, lastName, address, city, telephone)
-
-    const ownerID = await apiHelper.getOwnerIDFromOwnerCreationResponse(page)
+    const ownerID = await pm.onNewOwnerPage().addNewOwner(firstName, lastName, address, city, telephone)
 
     await pm.onOwnersPage().validateOwnerInformation(fullName, address, city, telephone)
 
-    await apiHelper.deleteOwner(ownerID)
+    await apiHelper.deleteOwnerByID(ownerID)
 
     await page.reload()
 

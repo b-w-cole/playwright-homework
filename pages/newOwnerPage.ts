@@ -7,7 +7,7 @@ export class NewOwnerPage extends HelperBase{
         super(page)
     }
 
-    async addNewOwner(firstName: string, lastName: string, address: string, city: string, telephone: string){
+    async addNewOwner(firstName: string, lastName: string, address: string, city: string, telephone: string): Promise<any>{
         await this.page.getByRole('textbox', {name: 'First Name'}).fill(firstName)
         await this.page.getByRole('textbox', {name: 'Last Name'}).fill(lastName)
         await this.page.getByRole('textbox', {name: 'Address'}).fill(address)
@@ -15,6 +15,9 @@ export class NewOwnerPage extends HelperBase{
         await this.page.getByRole('textbox', {name: 'Telephone'}).fill(telephone)
 
         await this.page.getByRole('button', {name: 'Add Owner'}).click()
+
+        const response = await this.page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/owners*')
+        return (await response.json()).id
     }
 
 }

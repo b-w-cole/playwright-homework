@@ -48,9 +48,9 @@ test('Add and Delete Veterinarian', async ({page, request}) => {
 
     await pm.onVeterinariansPage().validateSpecialtyFor(lastName, newSpecialty)
 
-    await apiHelper.deleteVeterinarian(vetID)
+    await apiHelper.deleteVeterinarianByID(vetID)
 
-    await apiHelper.validateVeterinarianDoesNotExist(vetID)
+    await apiHelper.validateVeterinarianDoesNotExistByID(vetID)
 
 })
 
@@ -85,9 +85,9 @@ test('New Specialty is Displayed', async ({page, request}) => {
     await pm.onVeterinariansPage().validateSpecialtyFor(firstName, newSpecialtyName)
 
     // Delete the test vet before deleting the new specialty
-    await apiHelper.deleteVeterinarian(veterinarianID)
+    await apiHelper.deleteVeterinarianByID(veterinarianID)
 
     // Delete the new specialty
-    await apiHelper.deleteSpecialty(newSpecialtyID)
+    await apiHelper.deleteSpecialtyByID(newSpecialtyID)
 
 })

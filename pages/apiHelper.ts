@@ -8,12 +8,7 @@ export class APIHelper{
     }
 
     /* OWNER API CALLS */
-    async getOwnerIDFromOwnerCreationResponse(page: Page): Promise<string>{
-        const response = await page.waitForResponse('https://petclinic-api.bondaracademy.com/petclinic/api/owners*')
-        return (await response.json()).id
-    }
-
-    async deleteOwner(ownerID: string){
+    async deleteOwnerByID(ownerID: string){
         const response = await this.request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/owners/${ownerID}`)
         expect(response.status()).toEqual(204)
     }
@@ -34,12 +29,12 @@ export class APIHelper{
         return (await veterinarianCreationResponse.json()).id
     }
 
-    async deleteVeterinarian(vetID: string){
+    async deleteVeterinarianByID(vetID: string){
         const deleteResponse = await this.request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/vets/${vetID}`)
         expect(deleteResponse.status()).toEqual(204)
     }
 
-    async validateVeterinarianDoesNotExist(veterinarianID: string){
+    async validateVeterinarianDoesNotExistByID(veterinarianID: string){
         const getVeterinariansResponse = await this.request.get('https://petclinic-api.bondaracademy.com/petclinic/api/vets')
         const responseBody = await getVeterinariansResponse.json()
         const veterinarians = await responseBody.map(vet => vet.id)
@@ -60,7 +55,7 @@ export class APIHelper{
         return (await response.json()).id
     }
 
-    async deleteSpecialty(specialtyID: string){
+    async deleteSpecialtyByID(specialtyID: string){
         const deleteSpecialtyResponse = await this.request.delete(`https://petclinic-api.bondaracademy.com/petclinic/api/specialties/${specialtyID}`)
         expect(deleteSpecialtyResponse.status()).toEqual(204)
     }
