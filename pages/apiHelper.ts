@@ -1,4 +1,4 @@
-import { Page, APIRequestContext, expect } from "@playwright/test";
+import { APIRequestContext, expect } from "@playwright/test";
 
 export class APIHelper{
     readonly request: APIRequestContext

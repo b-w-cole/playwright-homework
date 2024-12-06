@@ -24,13 +24,12 @@ export class AddPetPage extends HelperBase{
         await this.page.getByText('Save Pet').click()
 
         /* 10. On the Owner Information page, add assertions for the newly created pet. Name is Tom, Birth Date is in the format "2014-05-02", Type is dog */
-        // Select the most recent pet record with pet information only
-        const newPetTable = this.page.locator('app-pet-list').last().locator('dl').first()
+        // Select the most recent pet record with new pet information only
+        const newPetTable = this.page.locator('app-pet-list').filter({hasText: petName})
 
-        // Assert that the new pet's name, birthdate, and type are correct
-        await expect(newPetTable.locator('dd').first()).toHaveText('Tom')
+        // Assert that the new pet's birthdate and type are correct
         await expect(newPetTable.locator('dd').nth(1)).toHaveText( this.getDateDashFormat(birthdate) )
-        await expect(newPetTable.locator('dd').nth(2)).toHaveText('dog')
+        await expect(newPetTable.locator('dd').nth(2)).toHaveText(petType)
     }
 
 }
