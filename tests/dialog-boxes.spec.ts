@@ -1,5 +1,6 @@
 import { test } from '@playwright/test';
 import { PageManager } from '../pages/pageManager'
+import { RandomDataHelper } from '../pages/randomDataHelper';
 
 
 test.beforeEach( async({page}) => {
@@ -8,8 +9,9 @@ test.beforeEach( async({page}) => {
 
 test('Home page is opened and Welcome message is displayed', async ({page}) => {
     const pm = new PageManager(page)
+    const randomDataHelper = new RandomDataHelper()
 
-    const testPetType = 'pig'
+    const testPetType = randomDataHelper.getPetType()
 
     await pm.navigateTo().petTypesPage()
 

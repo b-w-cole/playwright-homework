@@ -1,5 +1,6 @@
 import { test } from '@playwright/test';
 import { PageManager } from '../pages/pageManager';
+import { RandomDataHelper } from '../pages/randomDataHelper';
 
 test.beforeEach(async ({ page }) => {
     await page.goto('/')
@@ -8,13 +9,15 @@ test.beforeEach(async ({ page }) => {
 
 test('Select the desired date in the calendar - 1', async ({page}) => {
     const pm = new PageManager(page)
+    const randomDataHelper = new RandomDataHelper()
 
     await pm.navigateTo().ownersPage()
 
     await pm.onOwnersPage().clickOwnerNameFor('Harold Davis')
 
-    const testPetName = 'Tom'
-    const testPetBirthDate = new Date('5/2/2014')
+    const testPetName = randomDataHelper.getPetName()
+    const testPetBirthDate = randomDataHelper.getPetBirthdate()
+    // Pet type will be selected from pre-defined list
     const testPetType = 'dog'
 
     await pm.onOwnerInformationPage().clickAddPet()
@@ -29,9 +32,12 @@ test('Select the desired date in the calendar - 1', async ({page}) => {
 
 test('Select the desired date in the calendar - 2', async ({page}) => {
     const pm = new PageManager(page)
+    const randomDataHelper = new RandomDataHelper()
 
     const testPetOwner = 'Jean Coleman'
     const testPetName = 'Samantha'
+    const testVisitReason1 = randomDataHelper.getVisitDescription()
+    const testVisitReason2 = randomDataHelper.getVisitDescription()
     
     /* 1. Select the OWNERS menu item in the navigation bar and then select "Search" from the drop-down menu */
     await pm.navigateTo().ownersPage()
@@ -50,7 +56,7 @@ test('Select the desired date in the calendar - 2', async ({page}) => {
     /* 7. Add assertion that date is displayed in the format "YYYY/MM/DD" */
     /* 8. Type the description in the field, for example, "dermatologists visit" and click "Add Visit" button */
     const appointmentDate = new Date()
-    await pm.onNewVisitPage().addVisit(appointmentDate, 'dermatologists visit')
+    await pm.onNewVisitPage().addVisit(appointmentDate, testVisitReason1)
 
     /* 9. Add assertion that date of visit is displayed at the top of the list of visits for "Samantha" pet on the "Owner Information" page and is in the format "YYYY-MM-DD" */    
     await pm.onOwnerInformationPage().validateVisitDateDisplayForTopVisit(testPetName, appointmentDate)
@@ -65,7 +71,7 @@ test('Select the desired date in the calendar - 2', async ({page}) => {
     newAppointmentDate.setDate(newAppointmentDate.getDate() - 45)
 
     /* 12. Type the description in the field, for example, "massage therapy" and click "Add Visit" button */
-    await pm.onNewVisitPage().addVisit(newAppointmentDate, 'massage therapy')
+    await pm.onNewVisitPage().addVisit(newAppointmentDate, testVisitReason2)
 
     /* 13. Add the assertion, that date added at step 11 is in chronological order in relation to the previous dates for "Samantha" pet on the "Owner Information" page. The date of visit above this date in the table should be greater. */
     await pm.onOwnerInformationPage().validateTwoLastVisitsInDesendOrder(testPetName)

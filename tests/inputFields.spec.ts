@@ -1,5 +1,6 @@
 import { test } from '@playwright/test';
 import { PageManager } from '../pages/pageManager'
+import { RandomDataHelper } from '../pages/randomDataHelper';
 
 test.beforeEach( async({page}) => {
   await page.goto('/')
@@ -7,9 +8,10 @@ test.beforeEach( async({page}) => {
 });
 
 test('Update pet type', async ({page}) => {
+  const randomDataHelper = new RandomDataHelper()
 
   const originalPetType = 'cat'
-  const testPetType = 'rabbit'
+  const testPetType = randomDataHelper.getPetType()
 
   const pm = new PageManager(page)
 
@@ -34,9 +36,10 @@ test('Update pet type', async ({page}) => {
 })
 
 test('Cancel pet type update', async ({page}) => {
+  const randomDataHelper = new RandomDataHelper()
 
   const originalPetType = 'dog'
-  const testPetType = 'moose'
+  const testPetType = randomDataHelper.getPetType()
 
   const pm = new PageManager(page)
 

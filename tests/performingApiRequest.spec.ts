@@ -1,6 +1,7 @@
 import { test } from '@playwright/test';
 import { PageManager } from '../pages/pageManager'
 import { APIHelper } from '../pages/apiHelper';
+import { RandomDataHelper } from '../pages/randomDataHelper';
 
 
 test.beforeEach( async({page}) => {
@@ -25,8 +26,10 @@ test('Delete Specialty', async ({page, request}) =>{
 })
 
 test('Add and Delete Veterinarian', async ({page, request}) => {
-    const firstName = 'Paula'
-    const lastName = 'Hutchinson'
+    const randomDataHelper = new RandomDataHelper()
+    
+    const firstName = randomDataHelper.getFirstName()
+    const lastName = randomDataHelper.getLastName()
     const originalSpecialties = []
     const newSpecialty = 'dentistry'
     
@@ -55,8 +58,10 @@ test('Add and Delete Veterinarian', async ({page, request}) => {
 })
 
 test('New Specialty is Displayed', async ({page, request}) => {
-    const firstName = 'Leroy'
-    const lastName = 'Jenkins'
+    const randomDataHelper = new RandomDataHelper()
+    
+    const firstName = randomDataHelper.getFirstName()
+    const lastName = randomDataHelper.getLastName()
     const newSpecialtyName = "api testing ninja"
     const oldSpecialtyName = 'surgery'
 

@@ -14,12 +14,14 @@ export class OwnerInformationPage extends HelperBase{
     }
 
     async clickEditPetFor(petName: string){
-        await this.page.getByText(petName).locator('..').getByRole('button', {name: 'Edit Pet'}).click()
+        const petTable = this.page.locator('.dl-horizontal').filter({hasText: petName})
+        await petTable.getByRole('button', {name: 'Edit Pet'}).click()
         await expect(this.page.locator('h2')).toHaveText('Pet')
     }
 
     async deletePet(petName: string){
-        await this.page.getByText(petName).locator('..').getByRole('button', {name: 'Delete'}).click()
+        const petTable = this.page.locator('.dl-horizontal').filter({hasText: petName})
+        await petTable.getByRole('button', {name: 'Delete'}).click()
         
         // Wait for delete to complete
         await this.page.waitForResponse("https://petclinic-api.bondaracademy.com/petclinic/api/pets/*")
