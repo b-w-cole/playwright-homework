@@ -1,6 +1,7 @@
 import { test } from '@playwright/test';
 import { PageManager } from '../pages/pageManager'
 import { APIHelper } from '../pages/apiHelper';
+import { RandomDataHelper } from '../pages/randomDataHelper';
 import testOwners from '../test-data/testOwners.json'
 import testVetSpecialties from '../test-data/testVetSpecialties.json'
 
@@ -64,13 +65,14 @@ test('Intercepting API Response', async({page}) => {
 })
 
 test('Add and delete an owner', async({page, request}) => {
-
-    const firstName = 'Test'
-    const lastName = 'Tester'
+    const randomDataHelper = new RandomDataHelper()
+    
+    const firstName = randomDataHelper.getFirstName()
+    const lastName = randomDataHelper.getLastName()
     const fullName = `${firstName} ${lastName}`
-    const address = '1234 Main St'
-    const city = 'Madison'
-    const telephone = '5555555555'
+    const address = randomDataHelper.getAddress()
+    const city = randomDataHelper.getCity()
+    const telephone = randomDataHelper.getPhone()
 
     const pm = new PageManager(page)
     const apiHelper = new APIHelper(request)
