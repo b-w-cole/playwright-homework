@@ -1,10 +1,12 @@
-import { Page, expect } from "@playwright/test"
+import { Page, expect, Locator } from "@playwright/test"
 import { HelperBase } from "./helperBase"
 
 export class OwnerInformationPage extends HelperBase{ 
-
+    ownerDetail: Locator
+    
     constructor(page : Page){
         super(page)
+        this.ownerDetail = this.page.locator('app-owner-detail')
     }
 
     async clickAddPet(){
@@ -81,9 +83,18 @@ export class OwnerInformationPage extends HelperBase{
     }
 
     async validatePetType(petName: string, petType: string){
-        const recievedPetType = this.page.getByText(petName).locator('..').locator('dd').last()
-        await expect(recievedPetType).toHaveText(petType)
+        const petTable = this.page.locator('.dl-horizontal').filter({hasText: petName})
 
+        await expect(petTable).toContainText(petType)
+    }
+
+    async validatePetInformation(petName: string, petBirthdate: Date, petType: string){
+        const petTable = this.page.locator('.dl-horizontal').filter({hasText: petName})
+        const petBirthdateString = this.getDateDashFormat(petBirthdate)
+
+        await expect(petTable).toContainText(petName)
+        await expect(petTable).toContainText(petBirthdateString)
+        await expect(petTable).toContainText(petType)
     }
 
     async validateOwnerInformation(fullName: string, address: string, city: string, telephone: string){       
@@ -110,6 +121,26 @@ export class OwnerInformationPage extends HelperBase{
         const petVisitsList = (await petTable.locator('app-visit-list').getByRole('row').all()).slice(1)
         
         expect(petVisitsList).toHaveLength(visitsCount)
+    }
+
+    async validateTopVisitInformationFor(petName: string, visitDate: Date, visitDescription){
+        const petTable = this.page.locator('table app-pet-list').filter({hasText: petName})
+        const visitRow = petTable.locator('app-visit-list').getByRole('row').nth(1)
+        const visitDateString = this.getDateDashFormat(visitDate)
+
+        await expect(visitRow).toContainText(visitDateString)
+        await expect(visitRow).toContainText(visitDescription)
+    }
+
+    async validateVisitDoesntExist(visitDate: Date, visitDescription: string){
+        const visitDateString = this.getDateDashFormat(visitDate)
+
+        await expect(this.ownerDetail).not.toContainText(visitDateString)
+        await expect(this.ownerDetail).not.toContainText(visitDescription)
+    }
+
+    async validatePetDoesntExist(petName: string){
+        await expect(this.ownerDetail).not.toContainText(petName)
     }
 
 }
