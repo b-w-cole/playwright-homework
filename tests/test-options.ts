@@ -6,7 +6,7 @@ import { APIHelper} from '../pages/apiHelper'
 
 export type TestOptions = {
     pageManager: PageManager
-    newOwnerFixture: [{
+    newOwnerFixture: {
         'firstName': string,
         'lastName': string,
         'address': string,
@@ -17,25 +17,7 @@ export type TestOptions = {
         'petType': string,
         'visitDate': Date,
         'visitDescription': string
-    }]
-}
-
-function setOwnerPetAndVisitVariables(){
-    const randomDataHelper = new RandomDataHelper()
-    const testVars = {
-        'firstName': randomDataHelper.getFirstName(),
-        'lastName': randomDataHelper.getLastName(),
-        'address': randomDataHelper.getAddress(),
-        'city': randomDataHelper.getCity(),
-        'telephone': randomDataHelper.getPhone(),
-        'petName': randomDataHelper.getPetName(),
-        'petBirthdate': randomDataHelper.getPetBirthdate(),
-        'petType': randomDataHelper.getPresetPetType(),
-        'visitDate': new Date(),
-        'visitDescription': randomDataHelper.getVisitDescription()
-
     }
-    return testVars
 }
 
 export const test = base.extend<TestOptions>({
@@ -48,18 +30,20 @@ export const test = base.extend<TestOptions>({
     }, {auto: true}],
 
     newOwnerFixture: async ({ pageManager, request }, use) => {
-        const testVars = setOwnerPetAndVisitVariables()
+        const randomDataHelper = new RandomDataHelper()
 
-        const firstName = testVars.firstName
-        const lastName = testVars.lastName
-        const address = testVars.address
-        const city = testVars.city
-        const telephone = testVars.telephone
-        const petName = testVars.petName
-        const petBirthdate = testVars.petBirthdate
-        const petType = testVars.petType
-        const visitDate = testVars.visitDate
-        const visitDescription = testVars.visitDescription
+        const testVars = {
+            'firstName': randomDataHelper.getFirstName(),
+            'lastName': randomDataHelper.getLastName(),
+            'address': randomDataHelper.getAddress(),
+            'city': randomDataHelper.getCity(),
+            'telephone': randomDataHelper.getPhone(),
+            'petName': randomDataHelper.getPetName(),
+            'petBirthdate': randomDataHelper.getPetBirthdate(),
+            'petType': randomDataHelper.getRandomPetType(),
+            'visitDate': new Date(),
+            'visitDescription': randomDataHelper.getVisitDescription()
+        }
 
         const apiHelper = new APIHelper(request)
 
@@ -67,31 +51,19 @@ export const test = base.extend<TestOptions>({
 
         await pageManager.onOwnersPage().clickAddOwner()
         
+        const ownerID = await pageManager.onNewOwnerPage().addNewOwner(testVars.firstName, testVars.lastName, testVars.address, testVars.city, testVars.telephone)
 
-        const ownerID = await pageManager.onNewOwnerPage().addNewOwner(firstName, lastName, address, city, telephone)
-
-        await pageManager.onOwnersPage().clickOwnerNameFor(`${firstName} ${lastName}`)
+        await pageManager.onOwnersPage().clickOwnerNameFor(`${testVars.firstName} ${testVars.lastName}`)
 
         await pageManager.onOwnerInformationPage().clickAddPet()
 
-        await pageManager.onAddPetPage().addNewPet(petName, petBirthdate, petType)
+        await pageManager.onAddPetPage().addNewPet(testVars.petName, testVars.petBirthdate, testVars.petType)
         
-        await pageManager.onOwnerInformationPage().clickAddVisit(petName)
+        await pageManager.onOwnerInformationPage().clickAddVisit(testVars.petName)
         
-        await pageManager.onNewVisitPage().addVisit(visitDate, visitDescription)
+        await pageManager.onNewVisitPage().addVisit(testVars.visitDate, testVars.visitDescription)
 
-        await use([{
-            'firstName': firstName, 
-            'lastName':lastName,
-            'address': address,
-            'city': city,
-            'telephone': telephone,
-            'petName': petName,
-            'petBirthdate': petBirthdate,
-            'petType': petType,
-            'visitDate': visitDate,
-            'visitDescription': visitDescription
-        }])
+        await use(testVars)
 
         await apiHelper.deleteOwnerByID(ownerID)
     }

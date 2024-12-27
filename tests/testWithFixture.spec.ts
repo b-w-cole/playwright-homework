@@ -6,15 +6,15 @@ test.beforeEach(async ({ page }) => {
 
 test('test with fixture', async ({ pageManager, newOwnerFixture }) => {
 
-    const ownerFullName = `${newOwnerFixture[0].firstName} ${newOwnerFixture[0].lastName}`
-    const address = newOwnerFixture[0].address
-    const city = newOwnerFixture[0].city
-    const telephone = newOwnerFixture[0].telephone
-    const petName = newOwnerFixture[0].petName
-    const petBirthdate = newOwnerFixture[0].petBirthdate
-    const petType = newOwnerFixture[0].petType
-    const visitDate = newOwnerFixture[0].visitDate
-    const visitDescription = newOwnerFixture[0].visitDescription
+    const ownerFullName = `${newOwnerFixture.firstName} ${newOwnerFixture.lastName}`
+    const address = newOwnerFixture.address
+    const city = newOwnerFixture.city
+    const telephone = newOwnerFixture.telephone
+    const petName = newOwnerFixture.petName
+    const petBirthdate = newOwnerFixture.petBirthdate
+    const petType = newOwnerFixture.petType
+    const visitDate = newOwnerFixture.visitDate
+    const visitDescription = newOwnerFixture.visitDescription
     
     // Validate Information
     await pageManager.onOwnerInformationPage().validateOwnerInformation(ownerFullName, address, city, telephone)
@@ -28,6 +28,6 @@ test('test with fixture', async ({ pageManager, newOwnerFixture }) => {
 
     // Assertions to validate data deletion
     await pageManager.onOwnerInformationPage().validatePetDoesntExist(petName)
-    await pageManager.onOwnerInformationPage().validateVisitDoesntExist(visitDate, visitDescription)
+    await pageManager.onOwnerInformationPage().validateVisitDoesntExist(petName, visitDate, visitDescription)
 
 })

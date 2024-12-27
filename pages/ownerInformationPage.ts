@@ -2,11 +2,9 @@ import { Page, expect, Locator } from "@playwright/test"
 import { HelperBase } from "./helperBase"
 
 export class OwnerInformationPage extends HelperBase{ 
-    ownerDetail: Locator
-    
+
     constructor(page : Page){
         super(page)
-        this.ownerDetail = this.page.locator('app-owner-detail')
     }
 
     async clickAddPet(){
@@ -83,13 +81,13 @@ export class OwnerInformationPage extends HelperBase{
     }
 
     async validatePetType(petName: string, petType: string){
-        const petTable = this.page.locator('.dl-horizontal').filter({hasText: petName})
+        const petTable = this.page.locator('.dl-horizontal', {hasText: petName})
 
         await expect(petTable).toContainText(petType)
     }
 
     async validatePetInformation(petName: string, petBirthdate: Date, petType: string){
-        const petTable = this.page.locator('.dl-horizontal').filter({hasText: petName})
+        const petTable = this.page.locator('.dl-horizontal', {hasText: petName})
         const petBirthdateString = this.getDateDashFormat(petBirthdate)
 
         await expect(petTable).toContainText(petName)
@@ -132,15 +130,21 @@ export class OwnerInformationPage extends HelperBase{
         await expect(visitRow).toContainText(visitDescription)
     }
 
-    async validateVisitDoesntExist(visitDate: Date, visitDescription: string){
+    async validateVisitDoesntExist(petName: string, visitDate: Date, visitDescription: string){
         const visitDateString = this.getDateDashFormat(visitDate)
-
-        await expect(this.ownerDetail).not.toContainText(visitDateString)
-        await expect(this.ownerDetail).not.toContainText(visitDescription)
+        const petTable = this.page.locator('table app-pet-list').filter({hasText: petName})
+        const petVisitsList = (await petTable.locator('app-visit-list').getByRole('row').all()).slice(1)
+        
+        for(let visit of petVisitsList){
+            await expect(visit).not.toContainText(visitDateString)
+            await expect(visit).not.toContainText(visitDescription)
+        }
     }
 
     async validatePetDoesntExist(petName: string){
-        await expect(this.ownerDetail).not.toContainText(petName)
+        const ownerDetail = this.page.locator('app-owner-detail')
+
+        await expect(ownerDetail).not.toContainText(petName)
     }
 
 }
