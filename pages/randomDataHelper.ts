@@ -37,4 +37,10 @@ export class RandomDataHelper{
     getVisitDescription(): string{
         return faker.lorem.sentence()
     }
+
+    getRandomPetType(){
+        const petList = ['cat', 'dog', 'lizard', 'bird', 'snake', 'hamster']
+        const index = faker.number.int({min: 1, max: 6})
+        return petList[index]
+    }
 }
