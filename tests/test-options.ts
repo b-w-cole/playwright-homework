@@ -51,7 +51,9 @@ export const test = base.extend<TestOptions>({
 
         await pageManager.onOwnersPage().clickAddOwner()
         
-        const ownerID = await pageManager.onNewOwnerPage().addNewOwner(testVars.firstName, testVars.lastName, testVars.address, testVars.city, testVars.telephone)
+        await pageManager.onNewOwnerPage().fillNewOwnerForm(testVars.firstName, testVars.lastName, testVars.address, testVars.city, testVars.telephone)
+        
+        const ownerID = await pageManager.onNewOwnerPage().clickAddNewOwner()
 
         await pageManager.onOwnersPage().clickOwnerNameFor(`${testVars.firstName} ${testVars.lastName}`)
 
