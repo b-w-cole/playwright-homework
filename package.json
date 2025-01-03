@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "allTests-chromium": "npx playwright test --project=chromium --workers=6",
-    "allTests-firefox": "npx playwright test --project=firefox --workers=6"
+    "allTests-chromium": "npx playwright test --project=chromium",
+    "allTests-firefox": "npx playwright test --project=firefox"
   },
   "keywords": [],
   "author": "",
