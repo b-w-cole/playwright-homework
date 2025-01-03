@@ -12,7 +12,7 @@ test('visual testing', async ({ pageManager }) => {
     const lastName = 'LastName'
     const address = 'Address'
     const city = 'City'
-    const telephone = 'Telephone'
+    const telephone = '5555555555'
 
     await pageManager.navigateTo().ownersPage()
     await pageManager.onOwnersPage().clickAddOwner()
