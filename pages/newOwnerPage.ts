@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { HelperBase } from './helperBase';
 
 export class NewOwnerPage extends HelperBase{
@@ -24,6 +24,11 @@ export class NewOwnerPage extends HelperBase{
 
     async getNewOwnerFormLocatorForVisualTesting(): Promise<Locator>{
         return this.page.locator('app-owner-add')
+    }
+
+    async createScreenshotForVisualTesting(screenshotName: string){
+        const formArea = this.page.locator('app-owner-add')
+        await expect(formArea).toHaveScreenshot(screenshotName)
     }
 
 }
