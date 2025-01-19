@@ -26,7 +26,7 @@ export class NewOwnerPage extends HelperBase{
         return this.page.locator('app-owner-add')
     }
 
-    async createScreenshotForVisualTesting(screenshotName: string){
+    async validateScreenshotForVisualTesting(screenshotName: string){
         const formArea = this.page.locator('app-owner-add')
         await expect(formArea).toHaveScreenshot(screenshotName)
     }

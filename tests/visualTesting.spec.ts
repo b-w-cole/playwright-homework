@@ -17,9 +17,9 @@ test('visual testing', async ({ pageManager }) => {
     await pageManager.navigateTo().ownersPage()
     await pageManager.onOwnersPage().clickAddOwner()
 
-    await pageManager.onNewOwnerPage().createScreenshotForVisualTesting('newFormScreenshot-1.png')
+    await pageManager.onNewOwnerPage().validateScreenshotForVisualTesting('newFormScreenshot-1.png')
 
     await pageManager.onNewOwnerPage().fillNewOwnerForm(firstName, lastName, address, city, telephone)
 
-    await pageManager.onNewOwnerPage().createScreenshotForVisualTesting('newFormScreenshot-2.png')
+    await pageManager.onNewOwnerPage().validateScreenshotForVisualTesting('newFormScreenshot-2.png')
 })
