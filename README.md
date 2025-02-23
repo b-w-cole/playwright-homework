@@ -1,16 +1,22 @@
 # Playwright Homework
-A framework template to perform homework for the class "SDET with Playwright"
+This is a collection of files built for achieving the [Bondar Academy "SDET with Playwright"](https://www.bondaracademy.com/course/sdet-with-playwright) course.  The assignment surrounds an imaginary veterinary website and includes a full test suite using a variety of techniques.
 
-## Configuration
-1. Create ```.env``` file in the root of the project. Use the ```.env-SAMPLE``` as an example
-2. Update ```.env``` file with a valid Bondar Academy credentials
-    Example:
-    ```
-    EMAIL='test@test.com'
-    PASSWORD='Welcome1'
-    ```
-3. Open a new terminal, execute command ```npm install``` to install project dependencies
-4. Run a sample test in ```homework.spec.ts``` to make sure everything is working
+```Note: The tests point to a test site and require credentials to log in.```
 
-P.S. ```.env```file is added to ```.gitignore``` so it will not be version controlled. 
-The stored credentials only be available for the local computer and will not be shared or exposed to repository.
+Tests are written in Typescript and follow the Page-Object-Model design pattern.
+
+In here, you will find examples of:
+
+* Playwright tests (under "tests")
+  * UI Testing
+  * API Testing
+    * [Working with API](https://github.com/b-w-cole/playwright-homework/blob/master/tests/workingWithAPI.spec.ts)
+    * [Performing API Request](https://github.com/b-w-cole/playwright-homework/blob/master/tests/performingApiRequest.spec.ts)
+* Page objects (under "pages")
+  * [PageManager](https://github.com/b-w-cole/playwright-homework/blob/master/pages/pageManager.ts) (manages instantiation of all pages)
+* Test Fixtures
+  * [Test Options](https://github.com/b-w-cole/playwright-homework/blob/master/tests/test-options.ts)
+  * [Test with Fixture](https://github.com/b-w-cole/playwright-homework/blob/master/tests/testWithFixture.spec.ts)
+* Docker integration
+
+I invite you to check out my work above!
